@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v6</title>
+    <title>Presensi Madrasah v7</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -14,22 +14,58 @@
             --ios-card: #ffffff;
             --ios-text: #1c1c1e;
             --ios-subtext: #8e8e93;
+            /* Warna hijau khusus yang diambil dari tema logo madrasah */
+            --theme-green: #0c5c2d; 
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--ios-bg);
             margin: 0;
-            padding: 20px;
+            /* Padding atas dihilangkan karena dipindah ke wrapper sticky */
+            padding: 0 20px 20px 20px; 
             color: var(--ios-text);
+        }
+
+        /* --- BAGIAN STICKY (Tidak Ikut Bergulir) --- */
+        .sticky-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--ios-bg);
+            padding-top: 20px;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            /* Opsional: menambah bayangan halus di bawah header saat digulir */
+            border-bottom: 1px solid rgba(0,0,0,0.05); 
         }
 
         /* Bagian Header & Tanggal */
         .header-container {
             display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 20px;
+            min-height: 60px; /* Ruang untuk logo */
+        }
+
+        /* Penataan Logo di Kiri Atas */
+        .logo-madrasah {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .teks-header {
+            display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
+            text-align: center;
         }
 
         h2 { margin: 0 0 5px 0; font-weight: 700; }
@@ -48,7 +84,8 @@
         .btn-hijri {
             background: none;
             border: none;
-            color: var(--ios-blue);
+            /* Warna tombol hijriyah mengikuti tema logo */
+            color: var(--theme-green);
             font-weight: bold;
             cursor: pointer;
             padding: 0 5px;
@@ -66,7 +103,6 @@
             align-items: center;
             gap: 15px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
         }
 
         .input-group {
@@ -91,29 +127,39 @@
             padding: 9px 18px;
             font-size: 15px;
             cursor: pointer;
-            background: var(--ios-blue);
+            /* Warna tombol Tampilkan mengikuti tema logo */
+            background: var(--theme-green);
             color: white;
             border: none;
             border-radius: 8px;
             font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        button.btn-utama:active {
+            background: #08401f; /* Warna hijau lebih gelap saat ditekan */
         }
 
         #loading {
             font-size: 14px;
-            color: var(--ios-blue);
+            color: var(--theme-green);
             text-align: center;
             margin: 10px 0;
             font-weight: 600;
         }
 
-        /* Area Kategori Guru */
-        .kategori-seksi { margin-bottom: 30px; text-align: left; }
+        /* --- AREA KATEGORI GURU (Bergulir) --- */
+        /* Penataan Tengah (Center) untuk kategori dan grid */
+        .kategori-seksi { 
+            margin-bottom: 30px; 
+            text-align: center; 
+        }
+        
         .judul-seksi {
             font-size: 14px;
             font-weight: 600;
             color: var(--ios-subtext);
             margin-bottom: 10px;
-            padding-left: 5px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -121,6 +167,8 @@
         .grid-guru {
             display: flex;
             flex-wrap: wrap;
+            /* Membuat foto-foto rata tengah */
+            justify-content: center;
             gap: 15px;
             background: rgba(255, 255, 255, 0.4);
             padding: 15px;
@@ -194,6 +242,7 @@
             font-size: 13px;
             font-weight: 600;
             border-bottom: 1px solid #f2f2f7;
+            text-align: left; /* Teks menu tetap rata kiri agar mudah dibaca */
         }
         
         .dropdown-menu div:last-child { border-bottom: none; }
@@ -240,8 +289,8 @@
 
         .loading-bar-isi {
             height: 100%;
-            width: 100%; /* Default 100% */
-            background-color: var(--ios-green);
+            width: 100%; 
+            background-color: var(--theme-green); /* Menggunakan warna hijau tema */
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
@@ -254,40 +303,44 @@
 </head>
 <body>
 
-    <div class="header-container">
-        <h2>Presensi MMU B-08 Surabaya</h2>
-        <div class="tanggal-display">
-            <span id="teksTanggal">Memuat tanggal...</span>
-            <button class="btn-hijri" onclick="ubahHijri(-1)">-</button>
-            <button class="btn-hijri" onclick="ubahHijri(0)">⟳</button>
-            <button class="btn-hijri" onclick="ubahHijri(1)">+</button>
-        </div>
-    </div>
-    
-    <div class="kontrol-panel">
-        <div class="input-group">
-            <label>Periode:</label>
-            <input type="date" id="tglMulai"> - <input type="date" id="tglAkhir">
+    <div class="sticky-wrapper">
+        <div class="header-container">
+            <img src="logo.png" alt="Logo Madrasah" class="logo-madrasah">
+            <div class="teks-header">
+                <h2>Presensi MMU B-08 Surabaya</h2>
+                <div class="tanggal-display">
+                    <span id="teksTanggal">Memuat tanggal...</span>
+                    <button class="btn-hijri" onclick="ubahHijri(-1)">-</button>
+                    <button class="btn-hijri" onclick="ubahHijri(0)">⟳</button>
+                    <button class="btn-hijri" onclick="ubahHijri(1)">+</button>
+                </div>
+            </div>
         </div>
         
-        <select id="pilihHari">
-            <option value="SABTU">SABTU</option>
-            <option value="AHAD">AHAD</option>
-            <option value="SENIN">SENIN</option>
-            <option value="SELASA">SELASA</option>
-            <option value="RABU">RABU</option>
-            <option value="KAMIS">KAMIS</option>
-        </select>
-        
-        <select id="pilihSesi">
-            <option value="1">Sesi 1 (07.00 - 08.20)</option>
-            <option value="2">Sesi 2 (08.50 - 10.10)</option>
-            <option value="3">Sesi 3 (10.30 - 11.50)</option>
-        </select>
-        
-        <button class="btn-utama" onclick="tampilkanJadwal()">Tampilkan</button>
+        <div class="kontrol-panel">
+            <div class="input-group">
+                <label>Periode:</label>
+                <input type="date" id="tglMulai"> - <input type="date" id="tglAkhir">
+            </div>
+            
+            <select id="pilihHari">
+                <option value="SABTU">SABTU</option>
+                <option value="AHAD">AHAD</option>
+                <option value="SENIN">SENIN</option>
+                <option value="SELASA">SELASA</option>
+                <option value="RABU">RABU</option>
+                <option value="KAMIS">KAMIS</option>
+            </select>
+            
+            <select id="pilihSesi">
+                <option value="1">Sesi 1 (07.00 - 08.20)</option>
+                <option value="2">Sesi 2 (08.50 - 10.10)</option>
+                <option value="3">Sesi 3 (10.30 - 11.50)</option>
+            </select>
+            
+            <button class="btn-utama" onclick="tampilkanJadwal()">Tampilkan</button>
+        </div>
     </div>
-
     <div id="loading" style="display:none;">Sinkronisasi Data...</div>
     
     <div class="kategori-seksi">
@@ -460,14 +513,14 @@
             // Simulasi pengurangan persentase grafik
             if (status === "Hadir") {
                 // Toggle logik: jika sudah hadir, klik lagi untuk netral (batal absen)
-                if (elemenBar.style.backgroundColor === "var(--ios-green)" && elemenCard.classList.contains("status-hadir")) {
+                if (elemenBar.style.backgroundColor === "var(--theme-green)" && elemenCard.classList.contains("status-hadir")) {
                     elemenBar.style.width = "100%";
-                    elemenBar.style.backgroundColor = "var(--ios-green)";
+                    elemenBar.style.backgroundColor = "var(--theme-green)";
                     elemenCard.classList.remove("status-hadir");
                 } else {
                     elemenCard.classList.add("status-hadir");
                     elemenBar.style.width = "100%";
-                    elemenBar.style.backgroundColor = "var(--ios-green)";
+                    elemenBar.style.backgroundColor = "var(--theme-green)";
                 }
             } else if (status === "Izin" || status === "Sakit") {
                 elemenCard.classList.add(status === "Izin" ? "status-izin" : "status-sakit");
