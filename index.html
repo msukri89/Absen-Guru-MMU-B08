@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v18</title>
+    <title>Presensi Madrasah v21</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -322,9 +322,29 @@
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
+        /* Status Warna Kartu */
         .status-hadir { border-color: var(--ios-green); transform: scale(1.02); box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
+        .status-bantu { border-color: var(--ios-blue); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
         .status-alpa { border-color: var(--ios-red); opacity: 0.7; filter: grayscale(50%); }
+
+        /* --- DESAIN JENDELA MODAL KHUSUS GURU PIKET --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 999;
+            display: none; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; padding: 20px; border-radius: 16px; width: 260px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .modal-buttons { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
+        .btn-standby { background: var(--ios-green); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-bantu { background: var(--ios-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-batal { background: var(--ios-subtext); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-tutup { background: transparent; color: var(--ios-red); border: none; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
+        
+        .btn-standby:active, .btn-bantu:active, .btn-batal:active { opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -387,12 +407,29 @@
         <div class="grid-guru" id="areaBebas"></div>
     </div>
 
+    <div id="modalPiket" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modalPiketName" style="margin-top:0; font-size:16px;">Nama Guru</h3>
+            <p style="font-size:13px; color:var(--ios-subtext); margin-bottom: 20px;">Pilih Status Kehadiran Piket:</p>
+            <div class="modal-buttons">
+                <button class="btn-standby" onclick="pilihPiket('Standby')">Standby Piket</button>
+                <button class="btn-bantu" onclick="pilihPiket('Bantu')">Bantu (Inval Kelas)</button>
+                <button class="btn-batal" onclick="pilihPiket('Belum Absen')">Batalkan Absen</button>
+            </div>
+            <button class="btn-tutup" onclick="tutupModalPiket()">Tutup Jendela</button>
+        </div>
+    </div>
+
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzRL6ylL2pb5uFWAzX7t2pfvXReAXhDvmgb5uV85rFD9s7IZTQzHWPgQDerBbbAaSek/exec";
         let dataSemuaGuru = [];
         let dataSemuaJadwal = [];
         let dataSemuaLog = [];
         let penyesuaianHijri = 0;
+
+        // Variabel penyimpan data sementara untuk jendela popup Piket
+        let activePiketHp = "";
+        let activePiketNama = "";
 
         window.onload = async function() {
             const hariIni = new Date();
@@ -513,6 +550,24 @@
             return clean;
         }
 
+        // --- FUNGSI KONTROL JENDELA PIKET ---
+        function bukaModalPiket(noHp, nama) {
+            activePiketHp = noHp;
+            activePiketNama = nama;
+            document.getElementById("modalPiketName").innerText = nama;
+            document.getElementById("modalPiket").style.display = "flex";
+        }
+        
+        function tutupModalPiket() {
+            document.getElementById("modalPiket").style.display = "none";
+        }
+        
+        function pilihPiket(status) {
+            kirimKeDatabaseSpreadsheet(activePiketHp, activePiketNama, status);
+            tutupModalPiket();
+        }
+        // ------------------------------------
+
         function tampilkanJadwal() {
             const stringTanggal = document.getElementById("tglAbsen").value;
             if (!stringTanggal) return;
@@ -553,22 +608,33 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                if (statusAwal === "Hadir") kartu.classList.add("status-hadir");
+                // Set warna perbatasan kartu
+                if (statusAwal === "Hadir" || statusAwal === "Standby") kartu.classList.add("status-hadir");
+                else if (statusAwal === "Bantu") kartu.classList.add("status-bantu");
                 else if (statusAwal === "Sakit") kartu.classList.add("status-sakit");
                 else if (statusAwal === "Izin") kartu.classList.add("status-izin");
                 else if (statusAwal === "Alpa") kartu.classList.add("status-alpa");
 
+                // Set warna progress bar
                 let barColor = "#c7c7cc";
                 let barWidth = "100%";
-                if (statusAwal === "Hadir") { barColor = "var(--theme-green)"; barWidth = "100%"; }
+                if (statusAwal === "Hadir" || statusAwal === "Standby") { barColor = "var(--theme-green)"; barWidth = "100%"; }
+                else if (statusAwal === "Bantu") { barColor = "var(--ios-blue)"; barWidth = "100%"; }
                 else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
                 else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
 
-                kartu.onclick = () => {
-                    const isHadir = kartu.classList.contains("status-hadir");
-                    const statusTarget = isHadir ? "Belum Absen" : "Hadir";
-                    kirimKeDatabaseSpreadsheet(noHp, nama, statusTarget);
-                };
+                // --- PEMBAGIAN KLIK BERDASARKAN STATUS ---
+                if (role.toUpperCase().includes("PIKET")) {
+                    // Jika ia adalah guru piket, tampilkan Jendela Khusus
+                    kartu.onclick = () => bukaModalPiket(noHp, nama);
+                } else {
+                    // Jika guru biasa / pimpinan, lakukan mode tombol bolak-balik
+                    kartu.onclick = () => {
+                        const isHadir = kartu.classList.contains("status-hadir");
+                        const statusTarget = isHadir ? "Belum Absen" : "Hadir";
+                        kirimKeDatabaseSpreadsheet(noHp, nama, statusTarget);
+                    };
+                }
 
                 kartu.innerHTML = `
                     <div class="foto-wadah">
@@ -652,12 +718,16 @@
                         dataSemuaLog.push({ tanggal: tanggalMasehi, sesi: sesiNomor.toString(), noHp: noHp, status: statusDipilih });
                     }
 
-                    elemenCard.classList.remove("status-hadir", "status-izin", "status-sakit", "status-alpa");
+                    elemenCard.classList.remove("status-hadir", "status-bantu", "status-izin", "status-sakit", "status-alpa");
 
-                    if (statusDipilih === "Hadir") {
+                    if (statusDipilih === "Hadir" || statusDipilih === "Standby") {
                         elemenCard.classList.add("status-hadir");
                         elemenBar.style.width = "100%";
                         elemenBar.style.backgroundColor = "var(--theme-green)";
+                    } else if (statusDipilih === "Bantu") {
+                        elemenCard.classList.add("status-bantu");
+                        elemenBar.style.width = "100%";
+                        elemenBar.style.backgroundColor = "var(--ios-blue)";
                     } else if (statusDipilih === "Izin" || statusDipilih === "Sakit") {
                         elemenCard.classList.add(statusDipilih === "Izin" ? "status-izin" : "status-sakit");
                         elemenBar.style.width = "60%"; 
