@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v14</title>
+    <title>Presensi Madrasah v15</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -340,7 +340,7 @@
         .loading-bar-isi {
             height: 100%;
             width: 100%; 
-            background-color: #c7c7cc; /* Warna abu-abu dasar */
+            background-color: #c7c7cc; 
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
@@ -558,7 +558,6 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                // Logika Klik Cerdas: Jika sudah hijau/Hadir, klik lagi akan mengirim pembatalan status
                 kartu.onclick = () => {
                     const isHadir = kartu.classList.contains("status-hadir");
                     const statusTarget = isHadir ? "Belum Absen" : "Hadir";
@@ -619,7 +618,6 @@
             const hariNama = susunanHari[objekTanggal.getDay()];
             const sesiNomor = document.getElementById("pilihSesi").value;
 
-            // Indikator Loading kirim data
             elemenBar.style.width = "100%";
             elemenBar.style.backgroundColor = "#c7c7cc"; 
 
@@ -656,7 +654,6 @@
                         elemenBar.style.width = "20%";
                         elemenBar.style.backgroundColor = "var(--ios-red)";
                     } else if (statusDipilih === "Belum Absen") {
-                        // Jika statusnya batal absen, kembalikan ke warna default abu-abu netral
                         elemenBar.style.width = "100%";
                         elemenBar.style.backgroundColor = "#c7c7cc";
                     }
@@ -670,8 +667,43 @@
             }
         }
 
-        function generateLaporan() {
-            alert("Fitur laporan siap dikembangkan mengikuti format baku Yayasan.");
+        // --- PEMBARUAN ENGINE UNDUH LAPORAN OTOMATIS EXCEL ---
+        async function generateLaporan() {
+            const tglMulai = document.getElementById("tglMulai").value;
+            const tglAkhir = document.getElementById("tglAkhir").value;
+            
+            if (!tglMulai || !tglAkhir) {
+                alert("Silakan tentukan tanggal Periode Dari dan Sampai terlebih dahulu.");
+                return;
+            }
+            
+            const pLoading = document.getElementById("loading");
+            pLoading.innerText = "Mengompilasi Data & Membangun Berkas Excel Yayasan...";
+            pLoading.style.display = "block";
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        action: "generateLaporan",
+                        tglMulai: tglMulai,
+                        tglAkhir: tglAkhir
+                    })
+                });
+                
+                const hasil = await response.json();
+                pLoading.style.display = "none";
+                
+                if (hasil.status === "sukses") {
+                    // Memicu browser tablet/HP untuk langsung mendownload file Excel
+                    window.location.href = hasil.downloadUrl;
+                } else {
+                    alert("Gagal memproses laporan: " + hasil.message);
+                }
+            } catch (error) {
+                pLoading.style.display = "none";
+                alert("Gagal terhubung ke server Google Sheets.");
+            }
         }
     </script>
 </body>
