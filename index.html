@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v9</title>
+    <title>Presensi Madrasah v10</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -56,7 +56,7 @@
         }
 
         .logo-tengah {
-            width: 150px; /* Ukuran diperbesar sesuai kebutuhan bingkai */
+            width: 150px; /* Ukuran diperbesar 150px sesuai instruksi */
             height: auto;
             object-fit: contain;
             margin-bottom: 10px;
@@ -73,7 +73,7 @@
             border-radius: 20px;
         }
 
-        /* Bungkus Kalender Pop-up Interaktif */
+        /* Kalender Pop-up Interaktif */
         .datepicker-wrapper {
             position: relative;
             cursor: pointer;
@@ -95,6 +95,7 @@
             font-size: 16px;
         }
 
+        /* Jam Digital di Bawah Kalender */
         .jam-display {
             font-size: 15px;
             font-weight: 700;
@@ -104,7 +105,7 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* --- PANEL PERIODE (Pojok Kanan Atas) --- */
+        /* --- PANEL PERIODE LAPORAN (Pojok Kanan Atas) --- */
         .periode-box {
             position: absolute;
             right: 0;
@@ -156,7 +157,7 @@
             background: #08401f;
         }
 
-        /* Panel Kontrol Bawah (Hanya Sesi & Tombol) */
+        /* Panel Kontrol Sesi */
         .kontrol-panel {
             background: var(--ios-card);
             padding: 10px 20px;
@@ -228,7 +229,7 @@
             min-height: 80px;
         }
 
-        /* Kartu Guru dengan Rasio 3:4 */
+        /* Kartu Guru Rasio 3:4 */
         .kartu-guru {
             background: var(--ios-card);
             border-radius: 12px;
@@ -415,7 +416,6 @@
         let penyesuaianHijri = 0;
 
         window.onload = async function() {
-            // Set tanggal hari ini ke detektor absen utama
             const hariIni = new Date();
             document.getElementById("tglAbsen").valueAsDate = hariIni;
             
@@ -448,7 +448,6 @@
             document.getElementById("liveClock").innerText = `${jam}:${menit}:${detik}`;
         }
 
-        // Otomatisasi Penentuan Sesi Berdasarkan Jam Komputer Aktif
         function setSesiOtomatisJam() {
             const sekarang = new Date();
             const waktuMenit = (sekarang.getHours() * 100) + sekarang.getMinutes();
@@ -486,7 +485,6 @@
             tampilkanJadwal();
         }
 
-        // Sinkronisasi Kalender Masehi & Hijriyah Berdasarkan Tanggal Terpilih
         function renderTanggal() {
             const stringTanggal = document.getElementById("tglAbsen").value;
             if (!stringTanggal) return;
@@ -513,7 +511,6 @@
             const stringTanggal = document.getElementById("tglAbsen").value;
             if (!stringTanggal) return;
 
-            // Ekstraksi nama hari otomatis dari tanggal terpilih
             const objekTanggal = new Date(stringTanggal);
             const susunanHari = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
             const hariDipilih = susunanHari[objekTanggal.getDay()];
@@ -617,7 +614,7 @@
         }
 
         function generateLaporan() {
-            alert("Sistem laporan siap dikonfigurasi setelah form yayasan diunggah.");
+            alert("Sistem laporan siap diproses via Google Apps Script.");
         }
     </script>
 </body>
