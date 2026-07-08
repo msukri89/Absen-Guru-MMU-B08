@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v7</title>
+    <title>Presensi Madrasah v8</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -14,7 +14,6 @@
             --ios-card: #ffffff;
             --ios-text: #1c1c1e;
             --ios-subtext: #8e8e93;
-            /* Warna hijau khusus yang diambil dari tema logo madrasah */
             --theme-green: #0c5c2d; 
         }
 
@@ -22,7 +21,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--ios-bg);
             margin: 0;
-            /* Padding atas dihilangkan karena dipindah ke wrapper sticky */
             padding: 0 20px 20px 20px; 
             color: var(--ios-text);
         }
@@ -36,7 +34,6 @@
             padding-top: 20px;
             padding-bottom: 10px;
             margin-bottom: 15px;
-            /* Opsional: menambah bayangan halus di bawah header saat digulir */
             border-bottom: 1px solid rgba(0,0,0,0.05); 
         }
 
@@ -47,18 +44,21 @@
             align-items: center;
             position: relative;
             margin-bottom: 20px;
-            min-height: 60px; /* Ruang untuk logo */
+            min-height: 110px; /* Ruang vertikal disesuaikan untuk susunan baru */
         }
 
-        /* Penataan Logo di Kiri Atas */
-        .logo-madrasah {
+        /* Keterangan di Kiri Atas (Dua Baris & Kapital Semua) */
+        .judul-kiri {
             position: absolute;
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            height: 60px;
-            width: auto;
-            object-fit: contain;
+            text-align: left;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--ios-text);
+            line-height: 1.3;
+            letter-spacing: 0.5px;
         }
 
         .teks-header {
@@ -68,7 +68,13 @@
             text-align: center;
         }
 
-        h2 { margin: 0 0 5px 0; font-weight: 700; }
+        /* Logo Di Tengah Atas Kalender */
+        .logo-tengah {
+            height: 55px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
         
         .tanggal-display {
             font-size: 14px;
@@ -84,12 +90,21 @@
         .btn-hijri {
             background: none;
             border: none;
-            /* Warna tombol hijriyah mengikuti tema logo */
             color: var(--theme-green);
             font-weight: bold;
             cursor: pointer;
             padding: 0 5px;
             font-size: 16px;
+        }
+
+        /* Tampilan Jam Digital di Bawah Kalender */
+        .jam-display {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ios-text);
+            margin-top: 6px;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums; /* Mencegah angka bergetar saat berganti */
         }
 
         /* Panel Kontrol Periode & Jadwal */
@@ -127,7 +142,6 @@
             padding: 9px 18px;
             font-size: 15px;
             cursor: pointer;
-            /* Warna tombol Tampilkan mengikuti tema logo */
             background: var(--theme-green);
             color: white;
             border: none;
@@ -137,7 +151,7 @@
         }
 
         button.btn-utama:active {
-            background: #08401f; /* Warna hijau lebih gelap saat ditekan */
+            background: #08401f; 
         }
 
         #loading {
@@ -149,7 +163,6 @@
         }
 
         /* --- AREA KATEGORI GURU (Bergulir) --- */
-        /* Penataan Tengah (Center) untuk kategori dan grid */
         .kategori-seksi { 
             margin-bottom: 30px; 
             text-align: center; 
@@ -167,7 +180,6 @@
         .grid-guru {
             display: flex;
             flex-wrap: wrap;
-            /* Membuat foto-foto rata tengah */
             justify-content: center;
             gap: 15px;
             background: rgba(255, 255, 255, 0.4);
@@ -242,7 +254,7 @@
             font-size: 13px;
             font-weight: 600;
             border-bottom: 1px solid #f2f2f7;
-            text-align: left; /* Teks menu tetap rata kiri agar mudah dibaca */
+            text-align: left; 
         }
         
         .dropdown-menu div:last-child { border-bottom: none; }
@@ -290,7 +302,7 @@
         .loading-bar-isi {
             height: 100%;
             width: 100%; 
-            background-color: var(--theme-green); /* Menggunakan warna hijau tema */
+            background-color: var(--theme-green); 
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
@@ -305,15 +317,21 @@
 
     <div class="sticky-wrapper">
         <div class="header-container">
-            <img src="logo.png" alt="Logo Madrasah" class="logo-madrasah">
+            <div class="judul-kiri">
+                PRESENSI<br>MMU B-08 SURABAYA
+            </div>
+            
             <div class="teks-header">
-                <h2>Presensi MMU B-08 Surabaya</h2>
+                <img src="logo.png" alt="Logo Madrasah" class="logo-tengah">
+                
                 <div class="tanggal-display">
                     <span id="teksTanggal">Memuat tanggal...</span>
                     <button class="btn-hijri" onclick="ubahHijri(-1)">-</button>
                     <button class="btn-hijri" onclick="ubahHijri(0)">⟳</button>
                     <button class="btn-hijri" onclick="ubahHijri(1)">+</button>
                 </div>
+                
+                <div id="liveClock" class="jam-display">00:00:00</div>
             </div>
         </div>
         
@@ -364,10 +382,13 @@
         let dataSemuaJadwal = [];
         let penyesuaianHijri = 0;
 
-        // Inisialisasi Tanggal dan Data saat halaman dimuat
         window.onload = async function() {
             setTanggalOtomatis();
             renderTanggal();
+            
+            // Jalankan jam digital secara langsung dan berulang
+            updateClock();
+            setInterval(updateClock, 1000);
             
             document.getElementById("loading").style.display = "block";
             try {
@@ -383,7 +404,15 @@
             }
         };
 
-        // Konfigurasi Default Periode (Tgl 20 bulan lalu - Tgl 19 bulan ini)
+        // Fungsi Update Jam Digital Format JJ:MM:DD
+        function updateClock() {
+            const now = new Date();
+            const jam = String(now.getHours()).padStart(2, '0');
+            const menit = String(now.getMinutes()).padStart(2, '0');
+            const detik = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById("liveClock").innerText = `${jam}:${menit}:${detik}`;
+        }
+
         function setTanggalOtomatis() {
             let hariIni = new Date();
             let tglMulai = new Date(hariIni.getFullYear(), hariIni.getMonth(), 20);
@@ -398,15 +427,11 @@
             document.getElementById("tglAkhir").valueAsDate = tglAkhir;
         }
 
-        // Logic Kalender Masehi & Hijriyah
         function renderTanggal() {
             const hariIni = new Date();
-            
-            // Format Masehi
             const opsiMasehi = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             const masehi = hariIni.toLocaleDateString('id-ID', opsiMasehi);
             
-            // Format Hijriyah (dengan penyesuaian)
             let tglHijri = new Date();
             tglHijri.setDate(tglHijri.getDate() + penyesuaianHijri);
             const opsiHijri = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -430,7 +455,7 @@
             document.getElementById("areaBebas").innerHTML = "";
 
             const jadwalSesiIni = dataSemuaJadwal.filter(b => b[1] === hariDipilih && b[2].toString() === sesiDipilih);
-            let listHpWajibAtauPiket = jadwalSesiIni.map(j => j[5]); // Menyatukan guru wajib & piket
+            let listHpWajibAtauPiket = jadwalSesiIni.map(j => j[5]);
 
             dataSemuaGuru.forEach(guru => {
                 const noHp = guru[0];
@@ -444,12 +469,10 @@
                     textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
                 }
 
-                // Struktur Kartu (UX Klik & Titik Tiga)
                 const kartu = document.createElement("div");
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                // Jika kartu diklik, langsung set "Hadir"
                 kartu.onclick = () => setStatus(noHp, 'Hadir');
 
                 kartu.innerHTML = `
@@ -471,7 +494,6 @@
                     </div>
                 `;
 
-                // Distribusi baris
                 if (role === "Pimpinan") {
                     document.getElementById("areaPimpinan").appendChild(kartu);
                 } else if (listHpWajibAtauPiket.includes(noHp)) {
@@ -482,37 +504,29 @@
             });
         }
 
-        // Fungsi Buka/Tutup Menu Titik Tiga
         function bukaMenu(event, noHp) {
-            event.stopPropagation(); // Mencegah kartu ikut terklik
-            // Tutup semua menu lain dulu
+            event.stopPropagation(); 
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-            // Buka menu spesifik
             const menu = document.getElementById(`menu-${noHp}`);
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        // Menutup menu jika klik di tempat lain
         document.addEventListener('click', () => {
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
         });
 
-        // Logika Perubahan Status & Grafik
         function setStatus(noHp, status, event) {
-            if (event) event.stopPropagation(); // Mencegah event merembet jika dari dropdown
+            if (event) event.stopPropagation(); 
             
             const elemenCard = document.getElementById(`card-${noHp}`);
             const elemenBar = document.getElementById(`bar-${noHp}`);
             const menu = document.getElementById(`menu-${noHp}`);
             
-            if (menu) menu.style.display = 'none'; // Tutup dropdown
+            if (menu) menu.style.display = 'none'; 
             
-            // Reset style
             elemenCard.classList.remove("status-hadir", "status-izin", "status-sakit", "status-alpa");
 
-            // Simulasi pengurangan persentase grafik
             if (status === "Hadir") {
-                // Toggle logik: jika sudah hadir, klik lagi untuk netral (batal absen)
                 if (elemenBar.style.backgroundColor === "var(--theme-green)" && elemenCard.classList.contains("status-hadir")) {
                     elemenBar.style.width = "100%";
                     elemenBar.style.backgroundColor = "var(--theme-green)";
