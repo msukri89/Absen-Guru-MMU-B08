@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v15</title>
+    <title>Presensi Madrasah v16</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -37,7 +37,6 @@
             border-bottom: 1px solid rgba(0,0,0,0.05); 
         }
 
-        /* Container Utama Header */
         .header-container {
             display: flex;
             justify-content: center;
@@ -47,7 +46,6 @@
             min-height: 160px; 
         }
 
-        /* Susunan Tengah: Logo, Kalender, Jam */
         .teks-header {
             display: flex;
             flex-direction: column;
@@ -73,16 +71,11 @@
             border-radius: 20px;
         }
 
-        /* Kalender Pop-up Interaktif */
         .datepicker-wrapper {
             position: relative;
             cursor: pointer;
             font-weight: 600;
             color: var(--ios-text);
-        }
-
-        .datepicker-wrapper:active {
-            opacity: 0.6;
         }
 
         .btn-hijri {
@@ -95,7 +88,6 @@
             font-size: 16px;
         }
 
-        /* Jam Digital di Bawah Kalender */
         .jam-display {
             font-size: 15px;
             font-weight: 700;
@@ -105,7 +97,7 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* --- PANEL PERIODE LAPORAN (Pojok Kanan Atas) --- */
+        /* PANEL PERIODE LAPORAN */
         .periode-box {
             position: absolute;
             right: 0;
@@ -153,11 +145,6 @@
             transition: background 0.2s;
         }
 
-        button.btn-laporan:active {
-            background: #08401f;
-        }
-
-        /* Panel Kontrol Sesi */
         .kontrol-panel {
             background: var(--ios-card);
             padding: 10px 20px;
@@ -191,10 +178,6 @@
             transition: background 0.2s ease;
         }
 
-        button.btn-utama:active {
-            background: #08401f; 
-        }
-
         #loading {
             font-size: 14px;
             color: var(--theme-green);
@@ -203,7 +186,7 @@
             font-weight: 600;
         }
 
-        /* --- AREA KATEGORI GURU (Bergulir) --- */
+        /* --- AREA KATEGORI GURU --- */
         .kategori-seksi { 
             margin-bottom: 30px; 
             text-align: center; 
@@ -229,7 +212,6 @@
             min-height: 80px;
         }
 
-        /* Kartu Guru Rasio 3:4 */
         .kartu-guru {
             background: var(--ios-card);
             border-radius: 12px;
@@ -340,7 +322,6 @@
         .loading-bar-isi {
             height: 100%;
             width: 100%; 
-            background-color: #c7c7cc; 
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
@@ -413,6 +394,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbzRL6ylL2pb5uFWAzX7t2pfvXReAXhDvmgb5uV85rFD9s7IZTQzHWPgQDerBbbAaSek/exec";
         let dataSemuaGuru = [];
         let dataSemuaJadwal = [];
+        let dataSemuaLog = []; // Menyimpan riwayat database lokal di PWA
         let penyesuaianHijri = 0;
 
         window.onload = async function() {
@@ -432,6 +414,8 @@
                 const data = await response.json();
                 dataSemuaGuru = data.guru.slice(1);
                 dataSemuaJadwal = data.jadwal.slice(1);
+                dataSemuaLog = data.log || []; // Masukkan riwayat log dari database
+                
                 document.getElementById("loading").style.display = "none";
                 tampilkanJadwal();
             } catch (error) {
@@ -525,6 +509,13 @@
             renderTanggal();
         }
 
+        function cleanNumber(no) {
+            let clean = no.toString().replace(/[^\d]/g, '');
+            if (clean.indexOf('62') === 0) clean = clean.substring(2);
+            if (clean.indexOf('0') === 0) clean = clean.substring(1);
+            return clean;
+        }
+
         function tampilkanJadwal() {
             const stringTanggal = document.getElementById("tglAbsen").value;
             if (!stringTanggal) return;
@@ -532,7 +523,6 @@
             const objekTanggal = new Date(stringTanggal);
             const susunanHari = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
             const hariDipilih = susunanHari[objekTanggal.getDay()];
-            
             const sesiDipilih = document.getElementById("pilihSesi").value;
             
             document.getElementById("areaPimpinan").innerHTML = "";
@@ -554,10 +544,32 @@
                     textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
                 }
 
+                // --- SINKRONISASI COCOKKAN DATA DENGAN LOG SPREADSHEET ---
+                const logKetemu = dataSemuaLog.find(l => 
+                    l.tanggal === stringTanggal && 
+                    l.sesi === sesiDipilih.toString() && 
+                    cleanNumber(l.noHp) === cleanNumber(noHp)
+                );
+                
+                let statusAwal = logKetemu ? logKetemu.status : "Belum Absen";
+
                 const kartu = document.createElement("div");
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
+                // Tentukan class border awal
+                if (statusAwal === "Hadir") kartu.classList.add("status-hadir");
+                else if (statusAwal === "Sakit") kartu.classList.add("status-sakit");
+                else if (statusAwal === "Izin") kartu.classList.add("status-izin");
+                else if (statusAwal === "Alpa") kartu.classList.add("status-alpa");
+
+                // Tentukan warna progress bar awal
+                let barColor = "#c7c7cc";
+                let barWidth = "100%";
+                if (statusAwal === "Hadir") { barColor = "var(--theme-green)"; barWidth = "100%"; }
+                else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
+                else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
+
                 kartu.onclick = () => {
                     const isHadir = kartu.classList.contains("status-hadir");
                     const statusTarget = isHadir ? "Belum Absen" : "Hadir";
@@ -578,7 +590,7 @@
                         <h3>${nama}</h3>
                         <p class="info-jadwal">${textInfo}</p>
                         <div class="wrapper-loading-bar">
-                            <div class="loading-bar-isi" id="bar-${noHp}"></div>
+                            <div class="loading-bar-isi" id="bar-${noHp}" style="width: ${barWidth}; background-color: ${barColor};"></div>
                         </div>
                     </div>
                 `;
@@ -639,6 +651,14 @@
                 const hasilSaves = await response.json();
 
                 if (hasilSaves.status === "sukses") {
+                    // --- UPDATE CACHE LOG LOKAL AGAR TETAP SINKRON TANPA REFRESH ---
+                    const idx = dataSemuaLog.findIndex(l => l.tanggal === tanggalMasehi && l.sesi === sesiNomor.toString() && cleanNumber(l.noHp) === cleanNumber(noHp));
+                    if (idx !== -1) {
+                        dataSemuaLog[idx].status = statusDipilih;
+                    } else {
+                        dataSemuaLog.push({ tanggal: tanggalMasehi, sesi: sesiNomor.toString(), noHp: noHp, status: statusDipilih });
+                    }
+
                     elemenCard.classList.remove("status-hadir", "status-izin", "status-sakit", "status-alpa");
 
                     if (statusDipilih === "Hadir") {
@@ -667,7 +687,6 @@
             }
         }
 
-        // --- PEMBARUAN ENGINE UNDUH LAPORAN OTOMATIS EXCEL ---
         async function generateLaporan() {
             const tglMulai = document.getElementById("tglMulai").value;
             const tglAkhir = document.getElementById("tglAkhir").value;
@@ -695,7 +714,6 @@
                 pLoading.style.display = "none";
                 
                 if (hasil.status === "sukses") {
-                    // Memicu browser tablet/HP untuk langsung mendownload file Excel
                     window.location.href = hasil.downloadUrl;
                 } else {
                     alert("Gagal memproses laporan: " + hasil.message);
