@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v11</title>
+    <title>Presensi Madrasah v12</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -485,25 +485,48 @@
             tampilkanJadwal();
         }
 
+        // --- PERBAIKAN SISTEM TOTAL UNTUK BULAN HIJRIAH DI HP ---
         function renderTanggal() {
             const stringTanggal = document.getElementById("tglAbsen").value;
             if (!stringTanggal) return;
 
             const targetTanggal = new Date(stringTanggal);
+            
+            // 1. Format Masehi Resmi
             const opsiMasehi = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             const masehi = targetTanggal.toLocaleDateString('id-ID', opsiMasehi);
             
+            // 2. Olah Tanggal Hijriah secara Terpisah agar Aman dari Bug HP
             let tglHijri = new Date(targetTanggal);
             tglHijri.setDate(tglHijri.getDate() + penyesuaianHijri);
-            const opsiHijri = { day: 'numeric', month: 'long', year: 'numeric' };
             
-            // Perbaikan standar internasional agar kompatibel di browser HP Android
-            let hijri = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', opsiHijri).format(tglHijri);
-            
-            // Pembersih pintar: menghapus teks era bawaan browser HP yang keliru (seperti SM)
-            hijri = hijri.replace(/sm|sebelum masehi|masehi|gregorian/gi, '').trim();
-            
-            document.getElementById("teksTanggal").innerText = `${masehi} M. / ${hijri} H.`;
+            try {
+                // Ambil angka komponen Hijriah murni dari browser
+                const dapatHari = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { day: 'numeric' }).format(tglHijri);
+                const dapatBulan = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { month: 'numeric' }).format(tglHijri);
+                let dapatTahun = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { year: 'numeric' }).format(tglHijri);
+                
+                // Bersihkan teks tahun jika ada karakter bawaan sistem HP yang terselip
+                dapatTahun = dapatTahun.replace(/[^\d]/g, '').trim();
+                
+                // Konversi angka bulan menjadi indeks array (1-12 menjadi 0-11)
+                const indeksBulan = parseInt(dapatBulan.replace(/[^\d]/g, '')) - 1;
+                
+                // Daftar Nama Bulan Islam Baku Bahasa Indonesia
+                const daftarBulanIslam = [
+                    "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", 
+                    "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", 
+                    "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"
+                ];
+                
+                const namaBulanIslam = daftarBulanIslam[indeksBulan] || "Muharram";
+                const teksHijriahSempurna = `${dapatHari} ${namaBulanIslam} ${dapatTahun}`;
+                
+                document.getElementById("teksTanggal").innerText = `${masehi} M. / ${teksHijriahSempurna} H.`;
+            } catch (e) {
+                // Cadangan otomatis jika sistem Intl bermasalah
+                document.getElementById("teksTanggal").innerText = `${masehi} M.`;
+            }
         }
 
         function ubahHijri(nilai) {
