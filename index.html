@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v5</title>
+    <title>Presensi Madrasah v6</title>
     <style>
-        /* Desain Antarmuka iOS Lanskap */
         :root {
             --ios-blue: #007aff;
             --ios-green: #34c759;
@@ -25,19 +24,44 @@
             color: var(--ios-text);
         }
 
-        h2 {
-            margin-top: 0;
+        /* Bagian Header & Tanggal */
+        .header-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             margin-bottom: 20px;
-            font-weight: 700;
-            text-align: center;
         }
 
-        /* Panel Kontrol Atas */
+        h2 { margin: 0 0 5px 0; font-weight: 700; }
+        
+        .tanggal-display {
+            font-size: 14px;
+            color: var(--ios-subtext);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #e5e5ea;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .btn-hijri {
+            background: none;
+            border: none;
+            color: var(--ios-blue);
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0 5px;
+            font-size: 16px;
+        }
+
+        /* Panel Kontrol Periode & Jadwal */
         .kontrol-panel {
             background: var(--ios-card);
             padding: 12px 20px;
             border-radius: 14px;
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
             gap: 15px;
@@ -45,51 +69,50 @@
             margin-bottom: 25px;
         }
 
-        select {
-            padding: 8px 12px;
-            font-size: 15px;
-            border-radius: 10px;
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--ios-subtext);
+        }
+
+        input[type="date"], select {
+            padding: 8px 10px;
+            font-size: 14px;
+            border-radius: 8px;
             border: 1px solid #c7c7cc;
             background-color: #f8f8f8;
             outline: none;
-            font-weight: 500;
+            font-family: inherit;
         }
 
-        button {
+        button.btn-utama {
             padding: 9px 18px;
             font-size: 15px;
             cursor: pointer;
             background: var(--ios-blue);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: 600;
-            transition: background 0.2s;
-        }
-
-        button:active {
-            background: #0056b3;
         }
 
         #loading {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--ios-blue);
             text-align: center;
-            margin: 15px 0;
+            margin: 10px 0;
             font-weight: 600;
         }
 
-        /* Pembagian Kategori Baris */
-        .kategori-seksi {
-            margin-bottom: 30px;
-            text-align: left;
-        }
-
+        /* Area Kategori Guru */
+        .kategori-seksi { margin-bottom: 30px; text-align: left; }
         .judul-seksi {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--ios-subtext);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             padding-left: 5px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -98,96 +121,155 @@
         .grid-guru {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 15px;
             background: rgba(255, 255, 255, 0.4);
             padding: 15px;
             border-radius: 16px;
             min-height: 80px;
         }
 
-        /* Kartu Komponen Guru */
+        /* Kartu Guru dengan Rasio 3:4 */
         .kartu-guru {
             background: var(--ios-card);
-            padding: 14px;
-            border-radius: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            width: 155px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            width: 130px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
             border: 2px solid transparent;
+            position: relative;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .kartu-guru img {
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
+        .foto-wadah {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .foto-wadah img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            margin-bottom: 8px;
-            border: 2px solid #e5e5ea;
+        }
+
+        /* Menu Titik Tiga (Kebab Menu) */
+        .titik-tiga {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--ios-text);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 6px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .dropdown-menu div {
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 1px solid #f2f2f7;
+        }
+        
+        .dropdown-menu div:last-child { border-bottom: none; }
+        .dropdown-menu div:hover { background-color: #f2f2f7; }
+        .opt-sakit { color: var(--ios-orange); }
+        .opt-izin { color: var(--ios-orange); }
+        .opt-alpa { color: var(--ios-red); }
+
+        /* Detail Teks Bawah Foto */
+        .info-bawah {
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
         }
 
         .kartu-guru h3 {
-            font-size: 13px;
+            font-size: 12px;
             margin: 0 0 4px 0;
-            font-weight: 600;
+            font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            width: 100%;
         }
 
-        .kartu-guru .info-jadwal {
-            font-size: 11px;
+        .info-jadwal {
+            font-size: 10px;
             color: var(--ios-subtext);
             margin: 0 0 8px 0;
-            min-height: 28px;
-            line-height: 1.3;
+            line-height: 1.2;
+            min-height: 24px;
         }
 
-        /* Komponen Grafik Indikator / Progress Bar */
+        /* Grafik Progress Bar */
         .wrapper-loading-bar {
             width: 100%;
             background-color: #e5e5ea;
-            border-radius: 4px;
-            height: 6px;
-            margin-bottom: 10px;
+            border-radius: 3px;
+            height: 5px;
             overflow: hidden;
         }
 
         .loading-bar-isi {
             height: 100%;
-            width: 100%;
+            width: 100%; /* Default 100% */
             background-color: var(--ios-green);
-            border-radius: 4px;
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
-        /* Menu Pilihan Status Kehadiran */
-        .pilih-status {
-            width: 100%;
-            font-size: 12px;
-            padding: 4px;
-            border-radius: 6px;
-            border: 1px solid #c7c7cc;
-            background-color: #ffffff;
-            outline: none;
-        }
+        /* Status Border Saat Diklik Hadir/Tidak */
+        .status-hadir { border-color: var(--ios-green); transform: scale(1.02); box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
+        .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
+        .status-alpa { border-color: var(--ios-red); opacity: 0.7; filter: grayscale(50%); }
 
-        /* Perubahan Warna Kartu Berdasarkan Status */
-        .status-hadir { border-color: var(--ios-green); background-color: #f2fff5; }
-        .status-izin { border-color: var(--ios-orange); background-color: #fff9f0; }
-        .status-sakit { border-color: var(--ios-orange); background-color: #fff9f0; }
-        .status-alpa { border-color: var(--ios-red); background-color: #fff2f2; }
     </style>
 </head>
 <body>
 
-    <h2>Presensi Kehadiran Guru & Pimpinan</h2>
+    <div class="header-container">
+        <h2>Presensi Madrasah</h2>
+        <div class="tanggal-display">
+            <span id="teksTanggal">Memuat tanggal...</span>
+            <button class="btn-hijri" onclick="ubahHijri(-1)">-</button>
+            <button class="btn-hijri" onclick="ubahHijri(0)">⟳</button>
+            <button class="btn-hijri" onclick="ubahHijri(1)">+</button>
+        </div>
+    </div>
     
     <div class="kontrol-panel">
+        <div class="input-group">
+            <label>Periode:</label>
+            <input type="date" id="tglMulai"> - <input type="date" id="tglAkhir">
+        </div>
+        
         <select id="pilihHari">
             <option value="SABTU">SABTU</option>
             <option value="AHAD">AHAD</option>
@@ -203,13 +285,13 @@
             <option value="3">Sesi 3 (10.30 - 11.50)</option>
         </select>
         
-        <button onclick="tampilkanJadwal()">Tampilkan</button>
+        <button class="btn-utama" onclick="tampilkanJadwal()">Tampilkan</button>
     </div>
 
-    <div id="loading" style="display:none;">Sinkronisasi Data dari Spreadsheet... Mohon tunggu.</div>
+    <div id="loading" style="display:none;">Sinkronisasi Data...</div>
     
     <div class="kategori-seksi">
-        <div class="judul-seksi">Pimpinan Madrasah (Selalu Standby)</div>
+        <div class="judul-seksi">Pimpinan Madrasah</div>
         <div class="grid-guru" id="areaPimpinan"></div>
     </div>
 
@@ -219,134 +301,181 @@
     </div>
 
     <div class="kategori-seksi">
-        <div class="judul-seksi">Guru Piket (Standby Sesi Ini)</div>
-        <div class="grid-guru" id="areaPiket"></div>
-    </div>
-
-    <div class="kategori-seksi">
-        <div class="judul-seksi">Guru Bebas / Cadangan Bantu (Tidak Ada Jam Mengajar Sesi Ini)</div>
+        <div class="judul-seksi">Guru Bebas / Cadangan Bantu</div>
         <div class="grid-guru" id="areaBebas"></div>
     </div>
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzRL6ylL2pb5uFWAzX7t2pfvXReAXhDvmgb5uV85rFD9s7IZTQzHWPgQDerBbbAaSek/exec";
-        
         let dataSemuaGuru = [];
         let dataSemuaJadwal = [];
+        let penyesuaianHijri = 0;
 
+        // Inisialisasi Tanggal dan Data saat halaman dimuat
         window.onload = async function() {
+            setTanggalOtomatis();
+            renderTanggal();
+            
             document.getElementById("loading").style.display = "block";
             try {
                 const response = await fetch(API_URL);
                 const data = await response.json();
-                
                 dataSemuaGuru = data.guru.slice(1);
                 dataSemuaJadwal = data.jadwal.slice(1);
-                
                 document.getElementById("loading").style.display = "none";
-                tampilkanJadwal(); // Otomatis load saat pertama kali buka
+                tampilkanJadwal();
             } catch (error) {
-                alert("Gagal memuat database otomatis. Silakan periksa koneksi.");
+                alert("Gagal memuat database.");
                 document.getElementById("loading").style.display = "none";
             }
         };
+
+        // Konfigurasi Default Periode (Tgl 20 bulan lalu - Tgl 19 bulan ini)
+        function setTanggalOtomatis() {
+            let hariIni = new Date();
+            let tglMulai = new Date(hariIni.getFullYear(), hariIni.getMonth(), 20);
+            let tglAkhir = new Date(hariIni.getFullYear(), hariIni.getMonth() + 1, 19);
+            
+            if (hariIni.getDate() < 20) {
+                tglMulai.setMonth(tglMulai.getMonth() - 1);
+                tglAkhir.setMonth(tglAkhir.getMonth() - 1);
+            }
+            
+            document.getElementById("tglMulai").valueAsDate = tglMulai;
+            document.getElementById("tglAkhir").valueAsDate = tglAkhir;
+        }
+
+        // Logic Kalender Masehi & Hijriyah
+        function renderTanggal() {
+            const hariIni = new Date();
+            
+            // Format Masehi
+            const opsiMasehi = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const masehi = hariIni.toLocaleDateString('id-ID', opsiMasehi);
+            
+            // Format Hijriyah (dengan penyesuaian)
+            let tglHijri = new Date();
+            tglHijri.setDate(tglHijri.getDate() + penyesuaianHijri);
+            const opsiHijri = { day: 'numeric', month: 'long', year: 'numeric' };
+            const hijri = new Intl.DateTimeFormat('id-TN-u-ca-islamic', opsiHijri).format(tglHijri);
+            
+            document.getElementById("teksTanggal").innerText = `${masehi} M. / ${hijri} H.`;
+        }
+
+        function ubahHijri(nilai) {
+            if (nilai === 0) penyesuaianHijri = 0;
+            else penyesuaianHijri += nilai;
+            renderTanggal();
+        }
 
         function tampilkanJadwal() {
             const hariDipilih = document.getElementById("pilihHari").value;
             const sesiDipilih = document.getElementById("pilihSesi").value;
             
-            // Bersihkan semua baris kategori sebelum memuat ulang
             document.getElementById("areaPimpinan").innerHTML = "";
             document.getElementById("areaWajib").innerHTML = "";
-            document.getElementById("areaPiket").innerHTML = "";
             document.getElementById("areaBebas").innerHTML = "";
 
-            // Cari seluruh jadwal yang aktif di hari dan sesi ini
             const jadwalSesiIni = dataSemuaJadwal.filter(b => b[1] === hariDipilih && b[2].toString() === sesiDipilih);
+            let listHpWajibAtauPiket = jadwalSesiIni.map(j => j[5]); // Menyatukan guru wajib & piket
 
-            // Klasifikasi penampung nomor HP untuk mempermudah filter baris
-            let listHpWajib = [];
-            let listHpPiket = [];
-
-            jadwalSesiIni.forEach(j => {
-                const mapel = j[4] ? j[4].toUpperCase() : "";
-                if (mapel.includes("PIKET")) {
-                    listHpPiket.push(j[5]);
-                } else {
-                    listHpWajib.push(j[5]);
-                }
-            });
-
-            // Olah seluruh data guru satu per satu masuk ke seksi masing-masing
             dataSemuaGuru.forEach(guru => {
                 const noHp = guru[0];
                 const nama = guru[1];
                 const role = guru[2];
-                const fotoUrl = guru[4] || "https://dummyimage.com/100x100/cccccc/ffffff&text=No+Foto";
+                const fotoUrl = guru[4] || "https://dummyimage.com/300x400/cccccc/ffffff&text=No+Foto";
 
-                // Cari apakah guru ini punya detail jam mengajar khusus di sesi ini
                 const detailJadwal = jadwalSesiIni.find(j => j[5] == noHp);
-                let textInfo = "";
+                let textInfo = role === "Pimpinan" ? "Standby Kantor" : "Jam Bebas";
                 if (detailJadwal) {
-                    textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`; // Format: Kelas <br> Mapel
-                } else {
-                    textInfo = role === "Pimpinan" ? "Standby Kantor" : "Jam Bebas / Pengganti";
+                    textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
                 }
 
-                // Buat struktur kartu guru secara dinamis
+                // Struktur Kartu (UX Klik & Titik Tiga)
                 const kartu = document.createElement("div");
-                kartu.className = "kartu-guru status-hadir"; // Default awal hadir (hijau)
+                kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
+                
+                // Jika kartu diklik, langsung set "Hadir"
+                kartu.onclick = () => setStatus(noHp, 'Hadir');
 
                 kartu.innerHTML = `
-                    <img src="${fotoUrl}" alt="${nama}">
-                    <h3>${nama}</h3>
-                    <p class="info-jadwal">${textInfo}</p>
-                    <div class="wrapper-loading-bar">
-                        <div class="loading-bar-isi" id="bar-${noHp}"></div>
+                    <div class="foto-wadah">
+                        <img src="${fotoUrl}" alt="${nama}">
+                        <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
+                        <div class="dropdown-menu" id="menu-${noHp}">
+                            <div class="opt-sakit" onclick="setStatus('${noHp}', 'Sakit', event)">Sakit</div>
+                            <div class="opt-izin" onclick="setStatus('${noHp}', 'Izin', event)">Izin</div>
+                            <div class="opt-alpa" onclick="setStatus('${noHp}', 'Alpa', event)">Alpa</div>
+                        </div>
                     </div>
-                    <select class="pilih-status" onchange="prosesPerubahanStatus('${noHp}', this.value)">
-                        <option value="Hadir">Hadir</option>
-                        <option value="Izin">Izin</option>
-                        <option value="Sakit">Sakit</option>
-                        <option value="Alpa">Alpa</option>
-                    </select>
+                    <div class="info-bawah">
+                        <h3>${nama}</h3>
+                        <p class="info-jadwal">${textInfo}</p>
+                        <div class="wrapper-loading-bar">
+                            <div class="loading-bar-isi" id="bar-${noHp}"></div>
+                        </div>
+                    </div>
                 `;
 
-                // Distribusikan kartu guru berdasarkan hierarki aturan yang Anda inginkan
+                // Distribusi baris
                 if (role === "Pimpinan") {
                     document.getElementById("areaPimpinan").appendChild(kartu);
-                } else if (listHpWajib.includes(noHp)) {
+                } else if (listHpWajibAtauPiket.includes(noHp)) {
                     document.getElementById("areaWajib").appendChild(kartu);
-                } else if (listHpPiket.includes(noHp)) {
-                    document.getElementById("areaPiket").appendChild(kartu);
                 } else {
                     document.getElementById("areaBebas").appendChild(kartu);
                 }
             });
         }
 
-        // Fungsi logika untuk memproses grafik loading bar berkurang sesuai status
-        function prosesPerubahanStatus(noHp, status) {
+        // Fungsi Buka/Tutup Menu Titik Tiga
+        function bukaMenu(event, noHp) {
+            event.stopPropagation(); // Mencegah kartu ikut terklik
+            // Tutup semua menu lain dulu
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+            // Buka menu spesifik
+            const menu = document.getElementById(`menu-${noHp}`);
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Menutup menu jika klik di tempat lain
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+        });
+
+        // Logika Perubahan Status & Grafik
+        function setStatus(noHp, status, event) {
+            if (event) event.stopPropagation(); // Mencegah event merembet jika dari dropdown
+            
             const elemenCard = document.getElementById(`card-${noHp}`);
             const elemenBar = document.getElementById(`bar-${noHp}`);
+            const menu = document.getElementById(`menu-${noHp}`);
             
-            // Bersihkan style status warna sebelumnya
+            if (menu) menu.style.display = 'none'; // Tutup dropdown
+            
+            // Reset style
             elemenCard.classList.remove("status-hadir", "status-izin", "status-sakit", "status-alpa");
 
+            // Simulasi pengurangan persentase grafik
             if (status === "Hadir") {
-                elemenCard.classList.add("status-hadir");
-                elemenBar.style.width = "100%";
-                elemenBar.style.backgroundColor = "var(--ios-green)";
+                // Toggle logik: jika sudah hadir, klik lagi untuk netral (batal absen)
+                if (elemenBar.style.backgroundColor === "var(--ios-green)" && elemenCard.classList.contains("status-hadir")) {
+                    elemenBar.style.width = "100%";
+                    elemenBar.style.backgroundColor = "var(--ios-green)";
+                    elemenCard.classList.remove("status-hadir");
+                } else {
+                    elemenCard.classList.add("status-hadir");
+                    elemenBar.style.width = "100%";
+                    elemenBar.style.backgroundColor = "var(--ios-green)";
+                }
             } else if (status === "Izin" || status === "Sakit") {
-                elemenCard.classList.add("status-izin");
-                // Berkurang menjadi 50% karena terhitung kehilangan bobot sesi tatap muka
-                elemenBar.style.width = "50%"; 
+                elemenCard.classList.add(status === "Izin" ? "status-izin" : "status-sakit");
+                elemenBar.style.width = "60%"; 
                 elemenBar.style.backgroundColor = "var(--ios-orange)";
             } else if (status === "Alpa") {
                 elemenCard.classList.add("status-alpa");
-                // Grafik kosong total (0%) jika Alpa penuh pada sesi tersebut
-                elemenBar.style.width = "0%";
+                elemenBar.style.width = "20%";
                 elemenBar.style.backgroundColor = "var(--ios-red)";
             }
         }
