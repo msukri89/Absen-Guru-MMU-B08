@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v10</title>
+    <title>Presensi Madrasah v11</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -56,7 +56,7 @@
         }
 
         .logo-tengah {
-            width: 150px; /* Ukuran diperbesar 150px sesuai instruksi */
+            width: 150px; 
             height: auto;
             object-fit: contain;
             margin-bottom: 10px;
@@ -496,9 +496,14 @@
             let tglHijri = new Date(targetTanggal);
             tglHijri.setDate(tglHijri.getDate() + penyesuaianHijri);
             const opsiHijri = { day: 'numeric', month: 'long', year: 'numeric' };
-            const hijri = new Intl.DateTimeFormat('id-TN-u-ca-islamic', opsiHijri).format(tglHijri);
             
-            document.getElementById("teksTanggal").innerText = `${masehi} M. / ${hijri}.`;
+            // Perbaikan standar internasional agar kompatibel di browser HP Android
+            let hijri = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', opsiHijri).format(tglHijri);
+            
+            // Pembersih pintar: menghapus teks era bawaan browser HP yang keliru (seperti SM)
+            hijri = hijri.replace(/sm|sebelum masehi|masehi|gregorian/gi, '').trim();
+            
+            document.getElementById("teksTanggal").innerText = `${masehi} M. / ${hijri} H.`;
         }
 
         function ubahHijri(nilai) {
