@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v13</title>
+    <title>Presensi Madrasah v14</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -340,7 +340,7 @@
         .loading-bar-isi {
             height: 100%;
             width: 100%; 
-            background-color: #c7c7cc; 
+            background-color: #c7c7cc; /* Warna abu-abu dasar */
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
@@ -450,7 +450,7 @@
 
         function setSesiOtomatisJam() {
             const sekarang = new Date();
-            const waktuMenit = (sekarang.getHours() * 100) + sekarang.getMinutes(); // Diperbaiki di sini
+            const waktuMenit = (sekarang.getHours() * 100) + sekarang.getMinutes();
             let sesiOtomatis = "1"; 
 
             if (waktuMenit >= 700 && waktuMenit <= 835) {
@@ -558,7 +558,12 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                kartu.onclick = () => kirimKeDatabaseSpreadsheet(noHp, nama, 'Hadir');
+                // Logika Klik Cerdas: Jika sudah hijau/Hadir, klik lagi akan mengirim pembatalan status
+                kartu.onclick = () => {
+                    const isHadir = kartu.classList.contains("status-hadir");
+                    const statusTarget = isHadir ? "Belum Absen" : "Hadir";
+                    kirimKeDatabaseSpreadsheet(noHp, nama, statusTarget);
+                };
 
                 kartu.innerHTML = `
                     <div class="foto-wadah">
@@ -614,6 +619,7 @@
             const hariNama = susunanHari[objekTanggal.getDay()];
             const sesiNomor = document.getElementById("pilihSesi").value;
 
+            // Indikator Loading kirim data
             elemenBar.style.width = "100%";
             elemenBar.style.backgroundColor = "#c7c7cc"; 
 
@@ -649,6 +655,10 @@
                         elemenCard.classList.add("status-alpa");
                         elemenBar.style.width = "20%";
                         elemenBar.style.backgroundColor = "var(--ios-red)";
+                    } else if (statusDipilih === "Belum Absen") {
+                        // Jika statusnya batal absen, kembalikan ke warna default abu-abu netral
+                        elemenBar.style.width = "100%";
+                        elemenBar.style.backgroundColor = "#c7c7cc";
                     }
                 } else {
                     alert("Gagal menyimpan data: " + hasilSaves.message);
