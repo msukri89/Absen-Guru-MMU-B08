@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v16</title>
+    <title>Presensi Madrasah v18</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -25,7 +25,6 @@
             color: var(--ios-text);
         }
 
-        /* --- BAGIAN STICKY (Tidak Ikut Bergulir) --- */
         .sticky-wrapper {
             position: sticky;
             top: 0;
@@ -97,7 +96,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* PANEL PERIODE LAPORAN */
         .periode-box {
             position: absolute;
             right: 0;
@@ -186,7 +184,6 @@
             font-weight: 600;
         }
 
-        /* --- AREA KATEGORI GURU --- */
         .kategori-seksi { 
             margin-bottom: 30px; 
             text-align: center; 
@@ -394,7 +391,7 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbzRL6ylL2pb5uFWAzX7t2pfvXReAXhDvmgb5uV85rFD9s7IZTQzHWPgQDerBbbAaSek/exec";
         let dataSemuaGuru = [];
         let dataSemuaJadwal = [];
-        let dataSemuaLog = []; // Menyimpan riwayat database lokal di PWA
+        let dataSemuaLog = [];
         let penyesuaianHijri = 0;
 
         window.onload = async function() {
@@ -414,7 +411,7 @@
                 const data = await response.json();
                 dataSemuaGuru = data.guru.slice(1);
                 dataSemuaJadwal = data.jadwal.slice(1);
-                dataSemuaLog = data.log || []; // Masukkan riwayat log dari database
+                dataSemuaLog = data.log || [];
                 
                 document.getElementById("loading").style.display = "none";
                 tampilkanJadwal();
@@ -433,8 +430,8 @@
         }
 
         function setSesiOtomatisJam() {
-            const sekarang = new Date();
-            const waktuMenit = (sekarang.getHours() * 100) + sekarang.getMinutes();
+            const brass = new Date();
+            const waktuMenit = (brass.getHours() * 100) + brass.getMinutes();
             let sesiOtomatis = "1"; 
 
             if (waktuMenit >= 700 && waktuMenit <= 835) {
@@ -544,7 +541,6 @@
                     textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
                 }
 
-                // --- SINKRONISASI COCOKKAN DATA DENGAN LOG SPREADSHEET ---
                 const logKetemu = dataSemuaLog.find(l => 
                     l.tanggal === stringTanggal && 
                     l.sesi === sesiDipilih.toString() && 
@@ -557,13 +553,11 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                // Tentukan class border awal
                 if (statusAwal === "Hadir") kartu.classList.add("status-hadir");
                 else if (statusAwal === "Sakit") kartu.classList.add("status-sakit");
                 else if (statusAwal === "Izin") kartu.classList.add("status-izin");
                 else if (statusAwal === "Alpa") kartu.classList.add("status-alpa");
 
-                // Tentukan warna progress bar awal
                 let barColor = "#c7c7cc";
                 let barWidth = "100%";
                 if (statusAwal === "Hadir") { barColor = "var(--theme-green)"; barWidth = "100%"; }
@@ -651,7 +645,6 @@
                 const hasilSaves = await response.json();
 
                 if (hasilSaves.status === "sukses") {
-                    // --- UPDATE CACHE LOG LOKAL AGAR TETAP SINKRON TANPA REFRESH ---
                     const idx = dataSemuaLog.findIndex(l => l.tanggal === tanggalMasehi && l.sesi === sesiNomor.toString() && cleanNumber(l.noHp) === cleanNumber(noHp));
                     if (idx !== -1) {
                         dataSemuaLog[idx].status = statusDipilih;
