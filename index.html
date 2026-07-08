@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v12</title>
+    <title>Presensi Madrasah v13</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -37,6 +37,7 @@
             border-bottom: 1px solid rgba(0,0,0,0.05); 
         }
 
+        /* Container Utama Header */
         .header-container {
             display: flex;
             justify-content: center;
@@ -46,6 +47,7 @@
             min-height: 160px; 
         }
 
+        /* Susunan Tengah: Logo, Kalender, Jam */
         .teks-header {
             display: flex;
             flex-direction: column;
@@ -71,11 +73,16 @@
             border-radius: 20px;
         }
 
+        /* Kalender Pop-up Interaktif */
         .datepicker-wrapper {
             position: relative;
             cursor: pointer;
             font-weight: 600;
             color: var(--ios-text);
+        }
+
+        .datepicker-wrapper:active {
+            opacity: 0.6;
         }
 
         .btn-hijri {
@@ -88,6 +95,7 @@
             font-size: 16px;
         }
 
+        /* Jam Digital di Bawah Kalender */
         .jam-display {
             font-size: 15px;
             font-weight: 700;
@@ -97,7 +105,7 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* PANEL PERIODE LAPORAN (Pojok Kanan Atas) */
+        /* --- PANEL PERIODE LAPORAN (Pojok Kanan Atas) --- */
         .periode-box {
             position: absolute;
             right: 0;
@@ -145,6 +153,10 @@
             transition: background 0.2s;
         }
 
+        button.btn-laporan:active {
+            background: #08401f;
+        }
+
         /* Panel Kontrol Sesi */
         .kontrol-panel {
             background: var(--ios-card);
@@ -177,6 +189,10 @@
             border-radius: 8px;
             font-weight: 600;
             transition: background 0.2s ease;
+        }
+
+        button.btn-utama:active {
+            background: #08401f; 
         }
 
         #loading {
@@ -324,7 +340,7 @@
         .loading-bar-isi {
             height: 100%;
             width: 100%; 
-            background-color: #c7c7cc; /* Default abu-abu sebelum diabsen */
+            background-color: #c7c7cc; 
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
@@ -434,7 +450,7 @@
 
         function setSesiOtomatisJam() {
             const sekarang = new Date();
-            const waktuMenit = (sekarang.getHours() * 100) + Clinical= sekarang.getMinutes();
+            const waktuMenit = (sekarang.getHours() * 100) + sekarang.getMinutes(); // Diperbaiki di sini
             let sesiOtomatis = "1"; 
 
             if (waktuMenit >= 700 && waktuMenit <= 835) {
@@ -542,7 +558,6 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                // Pemicu Simpan Data Saat Diklik (Hadir)
                 kartu.onclick = () => kirimKeDatabaseSpreadsheet(noHp, nama, 'Hadir');
 
                 kartu.innerHTML = `
@@ -585,7 +600,6 @@
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
         });
 
-        // --- FUNGSI UTAMA KIRIM DATA REAL-TIME KE SPREADSHEET ---
         async function kirimKeDatabaseSpreadsheet(noHp, namaGuru, statusDipilih, event) {
             if (event) event.stopPropagation();
             
@@ -594,18 +608,15 @@
             const menu = document.getElementById(`menu-${noHp}`);
             if (menu) menu.style.display = 'none';
 
-            // Ambil parameter tanggal masehi dan sesi saat ini di UI
             const tanggalMasehi = document.getElementById("tglAbsen").value;
             const objekTanggal = new Date(tanggalMasehi);
             const susunanHari = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
             const hariNama = susunanHari[objekTanggal.getDay()];
             const sesiNomor = document.getElementById("pilihSesi").value;
 
-            // Efek visual Loading sementara data dikirim
             elemenBar.style.width = "100%";
             elemenBar.style.backgroundColor = "#c7c7cc"; 
 
-            // Paket data yang dikirim ke Google Sheets
             const payload = {
                 tanggal: tanggalMasehi,
                 hari: hariNama,
@@ -616,7 +627,6 @@
             };
 
             try {
-                // Kirim data menggunakan metode POST text/plain untuk menghindari kendala CORS browser
                 const response = await fetch(API_URL, {
                     method: "POST",
                     body: JSON.stringify(payload)
@@ -625,7 +635,6 @@
                 const hasilSaves = await response.json();
 
                 if (hasilSaves.status === "sukses") {
-                    // Update tampilan kartu hanya jika data sukses tertulis di Google Sheets
                     elemenCard.classList.remove("status-hadir", "status-izin", "status-sakit", "status-alpa");
 
                     if (statusDipilih === "Hadir") {
