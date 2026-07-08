@@ -359,7 +359,7 @@
             const opsiHijri = { day: 'numeric', month: 'long', year: 'numeric' };
             const hijri = new Intl.DateTimeFormat('id-TN-u-ca-islamic', opsiHijri).format(tglHijri);
             
-            document.getElementById("teksTanggal").innerText = `${masehi} M. / ${hijri} H.`;
+            document.getElementById("teksTanggal").innerText = `${masehi} M. / ${hijri}.`;
         }
 
         function ubahHijri(nilai) {
