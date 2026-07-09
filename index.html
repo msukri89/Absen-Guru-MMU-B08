@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v23</title>
+    <title>Presensi Madrasah v24</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -322,7 +322,7 @@
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
-        /* Status Perbatasan Kartu */
+        /* Status Warna Kartu */
         .status-hadir { border-color: var(--ios-green); transform: scale(1.02); box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
         .status-bantu { border-color: var(--ios-blue); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
@@ -406,14 +406,12 @@
         <div class="grid-guru" id="areaBebas"></div>
     </div>
 
-    <!-- WINDOW MODAL DIALOG POPUP PINTAR/DINAMIS -->
     <div id="modalAksi" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalName" style="margin-top:0; font-size:16px;">Nama Guru</h3>
             <p id="modalDesc" style="font-size:13px; color:var(--ios-subtext); margin-bottom: 20px;">Pilih Status Kehadiran:</p>
             <div class="modal-buttons" id="modalButtonsContainer">
-                <!-- Tombol disuntik otomatis oleh JavaScript -->
-            </div>
+                </div>
             <button class="btn-tutup" onclick="tutupModalAksi()">Tutup Jendela</button>
         </div>
     </div>
@@ -547,7 +545,6 @@
             return clean;
         }
 
-        // --- FUNGSI KONTROL JENDELA DINAMIS ---
         function bukaModalAksi(noHp, nama, kategoriTugas) {
             activeHp = noHp;
             activeNama = nama;
@@ -555,7 +552,7 @@
             
             const btnContainer = document.getElementById("modalButtonsContainer");
             const desc = document.getElementById("modalDesc");
-            btnContainer.innerHTML = ""; // Bersihkan tombol lama
+            btnContainer.innerHTML = ""; 
 
             if (kategoriTugas === "PIKET") {
                 desc.innerText = "Pilih Status Kehadiran Piket:";
@@ -570,7 +567,7 @@
                     <button class="btn-bantu" onclick="pilihAksi('Bantu')">Masuk Kelas Bantu (Inval)</button>
                     <button class="btn-batal" onclick="pilihAksi('Belum Absen')">Batalkan Absen</button>
                 `;
-            } else if (kategoriTugas === "PIMPINAN") {
+            } else if (kategoriTugas === "PIMPINAN_STANDBY") {
                 desc.innerText = "Pilih Status Kehadiran Pimpinan:";
                 btnContainer.innerHTML = `
                     <button class="btn-standby" onclick="pilihAksi('Hadir')">Standby Kantor (Hadir)</button>
@@ -590,7 +587,6 @@
             kirimKeDatabaseSpreadsheet(activeHp, activeNama, statusTarget);
             tutupModalAksi();
         }
-        // --------------------------------------
 
         function tampilkanJadwal() {
             const stringTanggal = document.getElementById("tglAbsen").value;
@@ -615,23 +611,28 @@
                 const fotoUrl = guru[4] || "https://dummyimage.com/300x400/cccccc/ffffff&text=No+Foto";
 
                 const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
-
                 const detailJadwal = jadwalSesiIni.find(j => j[5] == noHp);
-                let textInfo = role.toUpperCase() === "PIMPINAN" ? "Standby Kantor" : "Jam Bebas";
+                
+                let textInfo = role === "Pimpinan" ? "Standby Kantor" : "Jam Bebas";
                 if (detailJadwal) {
                     textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
                 }
 
-                // Cek apakah guru ini piket di sesi sekarang
                 let isPiketSesiIni = false;
                 if (detailJadwal && detailJadwal[3] && detailJadwal[3].toString().toUpperCase().includes("PIKET")) {
                     isPiketSesiIni = true;
                 }
                 
-                // --- PENENTUAN KATEGORI TUGAS ---
-                let kategoriTugas = "WAJIB"; // Standar Wali Kelas / Fan
+                // --- KOREKSI LOGIKA AMAT CERDAS ---
+                let kategoriTugas = "WAJIB"; 
                 if (role.toUpperCase() === "PIMPINAN") {
-                    kategoriTugas = "PIMPINAN";
+                    if (detailJadwal) {
+                        // LOGIKA BARU: Pimpinan punya jadwal mengajar -> Langsung klik masuk tanpa popup!
+                        kategoriTugas = "WAJIB"; 
+                    } else {
+                        // Pimpinan kosong -> Butuh popup pilihan standby / inval
+                        kategoriTugas = "PIMPINAN_STANDBY";
+                    }
                 } else if (isPiketSesiIni) {
                     kategoriTugas = "PIKET";
                 } else if (!listHpWajibAtauPiket.includes(noHp)) {
@@ -663,16 +664,14 @@
                 else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
                 else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
 
-                // PEMBAGIAN FUNGSI KLIK
+                // PEMBAGIAN FITUR KLIK SAKTI
                 if (kategoriTugas === "WAJIB") {
-                    // Cukup klik bolak-balik (Toggle) untuk Guru Normal
                     kartu.onclick = () => {
                         const isHadir = kartu.classList.contains("status-hadir");
                         const statusTarget = isHadir ? "Belum Absen" : "Hadir";
                         kirimKeDatabaseSpreadsheet(noHp, namaAman, statusTarget);
                     };
                 } else {
-                    // Membuka jendela pintar (Pimpinan, Piket, Bebas)
                     kartu.onclick = () => bukaModalAksi(noHp, namaAman, kategoriTugas);
                 }
 
@@ -695,7 +694,8 @@
                     </div>
                 `;
 
-                if (kategoriTugas === "PIMPINAN") {
+                // Penempatan Baris Etalase: Pimpinan tetap mengumpul di baris paling atas agar rapi secara visual
+                if (role.toUpperCase() === "PIMPINAN") {
                     document.getElementById("areaPimpinan").appendChild(kartu);
                 } else if (kategoriTugas === "WAJIB" || kategoriTugas === "PIKET") {
                     document.getElementById("areaWajib").appendChild(kartu);
