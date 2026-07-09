@@ -585,13 +585,17 @@
             let listHpWajibAtauPiket = jadwalSesiIni.map(j => j[5]);
 
             dataSemuaGuru.forEach(guru => {
-                const noHp = guru[0];
-                const nama = guru[1];
-                const role = guru[2];
+                // Pengamanan ekstra untuk mencegah error jika ada kolom spreadsheet yang kosong
+                const noHp = guru[0] ? guru[0].toString() : "";
+                const nama = guru[1] ? guru[1].toString() : "Tanpa Nama";
+                const role = guru[2] ? guru[2].toString().toUpperCase() : "";
                 const fotoUrl = guru[4] || "https://dummyimage.com/300x400/cccccc/ffffff&text=No+Foto";
 
+                // Pengamanan nama dari tanda petik (contoh: UST. ROFI'I)
+                const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
                 const detailJadwal = jadwalSesiIni.find(j => j[5] == noHp);
-                let textInfo = role === "Pimpinan" ? "Standby Kantor" : "Jam Bebas";
+                let textInfo = role === "PIMPINAN" ? "Standby Kantor" : "Jam Bebas";
                 if (detailJadwal) {
                     textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
                 }
@@ -624,11 +628,9 @@
                 else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
 
                 // --- PEMBAGIAN KLIK BERDASARKAN STATUS ---
-                if (role.toUpperCase().includes("PIKET")) {
-                    // Jika ia adalah guru piket, tampilkan Jendela Khusus
+                if (role.includes("PIKET")) {
                     kartu.onclick = () => bukaModalPiket(noHp, nama);
                 } else {
-                    // Jika guru biasa / pimpinan, lakukan mode tombol bolak-balik
                     kartu.onclick = () => {
                         const isHadir = kartu.classList.contains("status-hadir");
                         const statusTarget = isHadir ? "Belum Absen" : "Hadir";
@@ -638,12 +640,12 @@
 
                 kartu.innerHTML = `
                     <div class="foto-wadah">
-                        <img src="${fotoUrl}" alt="${nama}">
+                        <img src="${fotoUrl}" alt="${namaAman}">
                         <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
                         <div class="dropdown-menu" id="menu-${noHp}">
-                            <div class="opt-sakit" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${nama}', 'Sakit', event)">Sakit</div>
-                            <div class="opt-izin" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${nama}', 'Izin', event)">Izin</div>
-                            <div class="opt-alpa" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${nama}', 'Alpa', event)">Alpa</div>
+                            <div class="opt-sakit" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Sakit', event)">Sakit</div>
+                            <div class="opt-izin" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Izin', event)">Izin</div>
+                            <div class="opt-alpa" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Alpa', event)">Alpa</div>
                         </div>
                     </div>
                     <div class="info-bawah">
@@ -655,7 +657,7 @@
                     </div>
                 `;
 
-                if (role === "Pimpinan") {
+                if (role === "PIMPINAN") {
                     document.getElementById("areaPimpinan").appendChild(kartu);
                 } else if (listHpWajibAtauPiket.includes(noHp)) {
                     document.getElementById("areaWajib").appendChild(kartu);
