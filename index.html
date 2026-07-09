@@ -482,7 +482,7 @@
             let tglAkhir = new Date(hariIni.getFullYear(), hariIni.getMonth() + 1, 19);
             
             if (hariIni.getDate() < 20) {
-                tMulai.setMonth(tglMulai.getMonth() - 1);
+                tglMulai.setMonth(tglMulai.getMonth() - 1); 
                 tglAkhir.setMonth(tglAkhir.getMonth() - 1);
             }
             document.getElementById("tglMulai").valueAsDate = tglMulai;
