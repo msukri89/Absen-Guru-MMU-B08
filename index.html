@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v21</title>
+    <title>Presensi Madrasah v22</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -322,13 +322,13 @@
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
-        /* Status Warna Kartu */
+        /* Status Perbatasan Kartu */
         .status-hadir { border-color: var(--ios-green); transform: scale(1.02); box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
         .status-bantu { border-color: var(--ios-blue); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
         .status-alpa { border-color: var(--ios-red); opacity: 0.7; filter: grayscale(50%); }
 
-        /* --- DESAIN JENDELA MODAL KHUSUS GURU PIKET --- */
+        /* JENDELA MODAL OVERLAY GURU PIKET */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 999;
@@ -343,7 +343,6 @@
         .btn-bantu { background: var(--ios-blue); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .btn-batal { background: var(--ios-subtext); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .btn-tutup { background: transparent; color: var(--ios-red); border: none; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
-        
         .btn-standby:active, .btn-bantu:active, .btn-batal:active { opacity: 0.7; }
     </style>
 </head>
@@ -427,7 +426,6 @@
         let dataSemuaLog = [];
         let penyesuaianHijri = 0;
 
-        // Variabel penyimpan data sementara untuk jendela popup Piket
         let activePiketHp = "";
         let activePiketNama = "";
 
@@ -550,7 +548,6 @@
             return clean;
         }
 
-        // --- FUNGSI KONTROL JENDELA PIKET ---
         function bukaModalPiket(noHp, nama) {
             activePiketHp = noHp;
             activePiketNama = nama;
@@ -566,7 +563,6 @@
             kirimKeDatabaseSpreadsheet(activePiketHp, activePiketNama, status);
             tutupModalPiket();
         }
-        // ------------------------------------
 
         function tampilkanJadwal() {
             const stringTanggal = document.getElementById("tglAbsen").value;
@@ -585,19 +581,26 @@
             let listHpWajibAtauPiket = jadwalSesiIni.map(j => j[5]);
 
             dataSemuaGuru.forEach(guru => {
-                // Pengamanan ekstra untuk mencegah error jika ada kolom spreadsheet yang kosong
                 const noHp = guru[0] ? guru[0].toString() : "";
                 const nama = guru[1] ? guru[1].toString() : "Tanpa Nama";
-                const role = guru[2] ? guru[2].toString().toUpperCase() : "";
+                const role = guru[2] ? guru[2].toString() : "Guru Fan";
                 const fotoUrl = guru[4] || "https://dummyimage.com/300x400/cccccc/ffffff&text=No+Foto";
 
-                // Pengamanan nama dari tanda petik (contoh: UST. ROFI'I)
                 const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
                 const detailJadwal = jadwalSesiIni.find(j => j[5] == noHp);
-                let textInfo = role === "PIMPINAN" ? "Standby Kantor" : "Jam Bebas";
+                let textInfo = role === "Pimpinan" ? "Standby Kantor" : "Jam Bebas";
                 if (detailJadwal) {
                     textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`;
+                }
+
+                // PERBAIKAN UTAMA: Cek apakah kolom Kelas (detailJadwal[3]) mengandung kata "PIKET"
+                let isPiketSesiIni = false;
+                if (detailJadwal && detailJadwal[3] && detailJadwal[3].toString().toUpperCase().includes("PIKET")) {
+                    isPiketSesiIni = true;
+                }
+                if (role.toUpperCase().includes("PIKET")) {
+                    isPiketSesiIni = true;
                 }
 
                 const logKetemu = dataSemuaLog.find(l => 
@@ -612,14 +615,12 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
                 
-                // Set warna perbatasan kartu
                 if (statusAwal === "Hadir" || statusAwal === "Standby") kartu.classList.add("status-hadir");
                 else if (statusAwal === "Bantu") kartu.classList.add("status-bantu");
                 else if (statusAwal === "Sakit") kartu.classList.add("status-sakit");
                 else if (statusAwal === "Izin") kartu.classList.add("status-izin");
                 else if (statusAwal === "Alpa") kartu.classList.add("status-alpa");
 
-                // Set warna progress bar
                 let barColor = "#c7c7cc";
                 let barWidth = "100%";
                 if (statusAwal === "Hadir" || statusAwal === "Standby") { barColor = "var(--theme-green)"; barWidth = "100%"; }
@@ -627,14 +628,14 @@
                 else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
                 else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
 
-                // --- PEMBAGIAN KLIK BERDASARKAN STATUS ---
-                if (role.includes("PIKET")) {
-                    kartu.onclick = () => bukaModalPiket(noHp, nama);
+                // PEMBAGIAN CIRI KLIK SAKTI
+                if (isPiketSesiIni) {
+                    kartu.onclick = () => bukaModalPiket(noHp, namaAman);
                 } else {
                     kartu.onclick = () => {
                         const isHadir = kartu.classList.contains("status-hadir");
                         const statusTarget = isHadir ? "Belum Absen" : "Hadir";
-                        kirimKeDatabaseSpreadsheet(noHp, nama, statusTarget);
+                        kirimKeDatabaseSpreadsheet(noHp, namaAman, statusTarget);
                     };
                 }
 
@@ -657,7 +658,7 @@
                     </div>
                 `;
 
-                if (role === "PIMPINAN") {
+                if (role === "Pimpinan") {
                     document.getElementById("areaPimpinan").appendChild(kartu);
                 } else if (listHpWajibAtauPiket.includes(noHp)) {
                     document.getElementById("areaWajib").appendChild(kartu);
