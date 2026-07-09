@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v24</title>
+    <title>Presensi Madrasah v25</title>
     <style>
         :root {
             --ios-blue: #007aff;
@@ -482,7 +482,7 @@
             let tglAkhir = new Date(hariIni.getFullYear(), hariIni.getMonth() + 1, 19);
             
             if (hariIni.getDate() < 20) {
-                tglMulai.setMonth(tglMulai.getMonth() - 1);
+                tMulai.setMonth(tglMulai.getMonth() - 1);
                 tglAkhir.setMonth(tglAkhir.getMonth() - 1);
             }
             document.getElementById("tglMulai").valueAsDate = tglMulai;
@@ -545,6 +545,7 @@
             return clean;
         }
 
+        // --- FUNGSI KONTROL JENDELA DINAMIS DENGAN KUNCI INVALIDASI ---
         function bukaModalAksi(noHp, nama, kategoriTugas) {
             activeHp = noHp;
             activeNama = nama;
@@ -554,24 +555,49 @@
             const desc = document.getElementById("modalDesc");
             btnContainer.innerHTML = ""; 
 
+            // LOGIKA VALIDASI SAKTI: Hitung apakah benar ada kelas kosong di sesi ini
+            const stringTanggal = document.getElementById("tglAbsen").value;
+            const sesiNomor = document.getElementById("pilihSesi").value;
+            const objekTanggal = new Date(stringTanggal);
+            const susunanHari = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
+            const hariNama = susunanHari[objekTanggal.getDay()];
+
+            const jadwalSesiIni = dataSemuaJadwal.filter(b => b[1] === hariNama && b[2].toString() === sesiNomor);
+            // Saring No HP Guru Wajib saja (Kolom Kelas tidak mengandung kata "PIKET")
+            const listHpWajibSesiIni = jadwalSesiIni.filter(j => j[3] && !j[3].toString().toUpperCase().includes("PIKET")).map(j => j[5]);
+
+            let adaKelasKosong = false;
+            listHpWajibSesiIni.forEach(hpW => {
+                const logW = dataSemuaLog.find(l => l.tanggal === stringTanggal && l.sesi === sesiNomor.toString() && cleanNumber(l.noHp) === cleanNumber(hpW));
+                if (logW && (logW.status === "Sakit" || logW.status === "Izin" || logW.status === "Alpa")) {
+                    adaKelasKosong = true;
+                }
+            });
+
+            // Bangun elemen HTML Tombol Bantu secara dinamis berdasarkan validasi kelas kosong
+            let tombolBantuHTML = `<button class="btn-bantu" onclick="pilihAksi('Bantu')">Bantu (Inval Kelas)</button>`;
+            if (!adaKelasKosong) {
+                tombolBantuHTML = `<button class="btn-bantu" style="background-color:#c7c7cc; color:#8e8e93; cursor:not-allowed;" disabled>Inval Dikunci - Semua Kelas Penuh</button>`;
+            }
+
             if (kategoriTugas === "PIKET") {
                 desc.innerText = "Pilih Status Kehadiran Piket:";
                 btnContainer.innerHTML = `
                     <button class="btn-standby" onclick="pilihAksi('Standby')">Standby Piket</button>
-                    <button class="btn-bantu" onclick="pilihAksi('Bantu')">Bantu (Inval Kelas)</button>
+                    ${tombolBantuHTML}
                     <button class="btn-batal" onclick="pilihAksi('Belum Absen')">Batalkan Absen</button>
                 `;
             } else if (kategoriTugas === "BEBAS") {
                 desc.innerText = "Tandai sebagai Guru Inval/Pengganti:";
                 btnContainer.innerHTML = `
-                    <button class="btn-bantu" onclick="pilihAksi('Bantu')">Masuk Kelas Bantu (Inval)</button>
+                    ${tombolBantuHTML}
                     <button class="btn-batal" onclick="pilihAksi('Belum Absen')">Batalkan Absen</button>
                 `;
             } else if (kategoriTugas === "PIMPINAN_STANDBY") {
                 desc.innerText = "Pilih Status Kehadiran Pimpinan:";
                 btnContainer.innerHTML = `
                     <button class="btn-standby" onclick="pilihAksi('Hadir')">Standby Kantor (Hadir)</button>
-                    <button class="btn-bantu" onclick="pilihAksi('Bantu')">Bantu (Inval Kelas)</button>
+                    ${tombolBantuHTML}
                     <button class="btn-batal" onclick="pilihAksi('Belum Absen')">Batalkan Absen</button>
                 `;
             }
@@ -623,14 +649,11 @@
                     isPiketSesiIni = true;
                 }
                 
-                // --- KOREKSI LOGIKA AMAT CERDAS ---
                 let kategoriTugas = "WAJIB"; 
                 if (role.toUpperCase() === "PIMPINAN") {
                     if (detailJadwal) {
-                        // LOGIKA BARU: Pimpinan punya jadwal mengajar -> Langsung klik masuk tanpa popup!
                         kategoriTugas = "WAJIB"; 
                     } else {
-                        // Pimpinan kosong -> Butuh popup pilihan standby / inval
                         kategoriTugas = "PIMPINAN_STANDBY";
                     }
                 } else if (isPiketSesiIni) {
@@ -664,7 +687,6 @@
                 else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
                 else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
 
-                // PEMBAGIAN FITUR KLIK SAKTI
                 if (kategoriTugas === "WAJIB") {
                     kartu.onclick = () => {
                         const isHadir = kartu.classList.contains("status-hadir");
@@ -694,7 +716,6 @@
                     </div>
                 `;
 
-                // Penempatan Baris Etalase: Pimpinan tetap mengumpul di baris paling atas agar rapi secara visual
                 if (role.toUpperCase() === "PIMPINAN") {
                     document.getElementById("areaPimpinan").appendChild(kartu);
                 } else if (kategoriTugas === "WAJIB" || kategoriTugas === "PIKET") {
