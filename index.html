@@ -39,7 +39,7 @@
         .sticky-wrapper {
             flex-shrink: 0;
             background-color: var(--ios-bg);
-            padding: 15px 0;
+            padding: 18px 0;
             margin-bottom: 10px;
             border-bottom: 1px solid rgba(0,0,0,0.05); 
             display: flex;
@@ -58,7 +58,7 @@
             height: 44px; 
             width: auto;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 12px;
         }
         
         .waktu-box {
@@ -123,17 +123,11 @@
         }
 
         /* Poin 4: Penyeragaman Ukuran & Desain Sesi Dengan Kartu Laporan */
-        .kontrol-panel, .periode-box {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-end;
-            gap: 10px;
-            background: var(--ios-card);
-            padding: 8px 12px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            box-sizing: border-box;
-            height: 46px;
+       .kontrol-panel, .periode-box {
+            display: flex; flex-direction: row; align-items: center;
+            gap: 12px; background: var(--ios-card); padding: 8px 16px;
+            border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-sizing: border-box; height: 52px; /* Lebih tinggi & lega */
         }
 
         .kontrol-panel {
