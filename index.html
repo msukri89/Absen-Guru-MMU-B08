@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v32</title>
+    <title>Presensi Madrasah v33</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -47,43 +47,24 @@
             align-items: center;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
 
         .logo-tengah {
-            height: 44px; 
-            width: auto;
-            object-fit: contain;
-            border-radius: 12px;
+            height: 44px; width: auto;
+            object-fit: contain; border-radius: 12px;
         }
         
-        .waktu-box {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+        .waktu-box { display: flex; flex-direction: column; gap: 4px; }
 
         .datepicker-wrapper {
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 13px;
-            color: var(--ios-text);
-            padding-left: 2px;
+            cursor: pointer; font-weight: 700; font-size: 13px;
+            color: var(--ios-text); padding-left: 2px;
         }
 
         .tanggal-display {
-            font-size: 11px;
-            color: var(--ios-subtext);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: #e5e5ea;
-            padding: 3px 8px;
-            border-radius: 8px;
-            width: max-content;
+            font-size: 11px; color: var(--ios-subtext);
+            display: flex; align-items: center; gap: 6px;
+            background: #e5e5ea; padding: 3px 8px; border-radius: 8px; width: max-content;
         }
 
         .btn-hijri {
@@ -92,229 +73,145 @@
         }
 
         .jam-card {
-            background: var(--ios-card);
-            padding: 8px 12px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 46px;
-            box-sizing: border-box;
-            min-width: 85px;
+            background: var(--ios-card); padding: 8px 12px; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            height: 46px; box-sizing: border-box; min-width: 85px;
         }
 
         .jam-display {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--theme-green);
-            letter-spacing: 0.5px;
-            font-variant-numeric: tabular-nums;
+            font-size: 12px; font-weight: 700; color: var(--theme-green);
+            letter-spacing: 0.5px; font-variant-numeric: tabular-nums;
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .header-right { display: flex; align-items: center; gap: 12px; }
 
         .kontrol-panel, .periode-box {
             display: flex; flex-direction: row; align-items: center;
             gap: 12px; background: var(--ios-card); padding: 8px 16px;
             border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            box-sizing: border-box; height: 52px;
+            box-sizing: border-box; height: 52px; 
         }
 
-        .kontrol-panel {
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .kontrol-panel { cursor: pointer; transition: background 0.2s; }
         .kontrol-panel:active { background-color: #e5e5ea; }
 
         .input-group-vertical {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            font-size: 10px;
-            color: var(--ios-subtext);
-            text-align: left;
+            display: flex; flex-direction: column; gap: 3px;
+            font-size: 10px; color: var(--ios-subtext); text-align: left;
         }
 
         .kalender-tombol-palsu {
-            padding: 4px 6px;
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: 6px;
-            border: 1px solid #c7c7cc;
-            background: #f8f8f8;
-            cursor: pointer;
-            color: var(--ios-text);
-            text-align: center;
+            padding: 4px 6px; font-size: 11px; font-weight: 600;
+            border-radius: 6px; border: 1px solid #c7c7cc;
+            background: #f8f8f8; cursor: pointer; color: var(--ios-text); text-align: center;
         }
 
         button.btn-laporan {
-            padding: 0 8px;
-            font-size: 11px;
-            background: var(--theme-green);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            height: 23px;
-            transition: background 0.2s;
+            padding: 0 8px; font-size: 11px; background: var(--theme-green);
+            color: white; border: none; border-radius: 6px; font-weight: 600;
+            cursor: pointer; height: 23px; transition: background 0.2s;
         }
 
         #loading {
-            font-size: 12px;
-            color: var(--theme-green);
-            text-align: center;
-            margin-bottom: 10px;
-            flex-shrink: 0;
+            font-size: 12px; color: var(--theme-green); text-align: center;
+            margin-bottom: 10px; flex-shrink: 0;
         }
 
         /* 2. LAYOUT MAIN BOARD */
         .main-board {
-            flex-grow: 1;
-            display: grid;
-            /* PERUBAHAN: Membagi grid menjadi proporsi 25% - 50% - 25% */
-            grid-template-columns: 1fr 2fr 1fr; 
-            gap: 15px;
-            overflow: hidden; 
+            flex-grow: 1; display: grid; grid-template-columns: 1fr 2fr 1fr; 
+            gap: 15px; overflow: hidden; 
         }
 
         .kategori-seksi { 
-            display: flex;
-            flex-direction: column;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 16px;
-            padding: 12px;
-            height: 100%;
-            box-sizing: border-box;
-            overflow: hidden;
+            display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px; padding: 12px; height: 100%; box-sizing: border-box; overflow: hidden;
         }
         
         .judul-seksi {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--ios-subtext);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            flex-shrink: 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding-bottom: 5px;
+            font-size: 12px; font-weight: 700; color: var(--ios-subtext);
+            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+            flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px;
+            display: flex; align-items: center; gap: 6px; /* Untuk penempatan ikon */
         }
 
         .grid-guru {
-            flex-grow: 1;
-            display: grid;
-            align-content: start;
-            gap: 10px;
-            overflow-y: hidden; 
+            flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: hidden; 
         }
 
         #areaPimpinan { grid-template-columns: 1fr; }
         #areaWajib { grid-template-columns: repeat(2, 1fr); }
         #areaBebas { grid-template-columns: 1fr; }
 
-        /* 3. CARDS */
+        /* 3. CARDS & VISUAL EFFECTS */
         .kartu-guru {
-            background: var(--ios-card);
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            width: 100%;
-            height: 70px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 6px 10px;
-            border: 2px solid transparent;
-            position: relative;
-            box-sizing: border-box;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            z-index: 1;
+            background: var(--ios-card); border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); width: 100%; height: 70px;
+            display: flex; flex-direction: row; align-items: center; padding: 6px 10px;
+            border: 2px solid transparent; position: relative; box-sizing: border-box;
+            transition: all 0.2s ease; cursor: pointer; z-index: 1;
         }
 
-        .kartu-guru.menu-active {
-            z-index: 99 !important;
+        /* Hover Effect Interaktif */
+        .kartu-guru:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .kartu-guru.menu-active { z-index: 99 !important; }
+
+        /* Pembeda Khusus Guru Piket */
+        .kartu-piket {
+            background: linear-gradient(135deg, #ffffff 0%, #fffdf5 100%);
+            border: 1px dashed rgba(255, 193, 7, 0.5);
         }
 
         .foto-wadah {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex-shrink: 0;
-            margin-right: 10px;
-            background: #e5e5ea;
+            width: 50px; height: 50px; border-radius: 50%;
+            overflow: hidden; flex-shrink: 0; margin-right: 10px; background: #e5e5ea;
         }
 
-        .foto-wadah img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .foto-wadah img { width: 100%; height: 100%; object-fit: cover; }
 
         .info-bawah {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: left;
-            flex-grow: 1;
-            padding: 0;
-            width: calc(100% - 45px);
+            display: flex; flex-direction: column; justify-content: center;
+            text-align: left; flex-grow: 1; padding: 0; width: calc(100% - 45px);
         }
 
         .kartu-guru h3 {
-            font-size: 11px;
-            margin: 0 0 1px 0;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 11px; margin: 0 0 1px 0; font-weight: 700;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            display: flex; align-items: center; gap: 5px;
         }
 
         .info-jadwal {
-            font-size: 9px;
-            color: var(--ios-subtext);
-            margin: 0;
-            line-height: 1.1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 9px; color: var(--ios-subtext); margin: 0;
+            line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
+        /* Lencana Status (Badges) */
+        .badge-status {
+            font-size: 8px; padding: 2px 4px; border-radius: 4px;
+            font-weight: 800; letter-spacing: 0.3px; color: white;
+            display: inline-block;
+        }
+        .bg-orange { background-color: var(--ios-orange); }
+        .bg-red { background-color: var(--ios-red); }
+        .bg-blue { background-color: var(--ios-blue); }
+        .d-none { display: none !important; }
+
         .titik-tiga {
-            position: absolute;
-            top: 50%;
-            right: 8px;
-            transform: translateY(-50%);
-            color: var(--ios-subtext);
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            z-index: 2;
+            position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
+            color: var(--ios-subtext); width: 20px; height: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 14px; cursor: pointer; z-index: 2;
         }
 
         .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 34px;
-            right: 4px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 100;
+            display: none; position: absolute; top: 34px; right: 4px;
+            background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-direction: column; overflow: hidden; z-index: 100;
         }
 
         .dropdown-menu div { padding: 8px 16px; font-size: 12px; font-weight: 600; border-bottom: 1px solid #f2f2f7; text-align: left; }
@@ -416,17 +313,17 @@
     
     <div class="main-board">
         <div class="kategori-seksi">
-            <div class="judul-seksi">Pimpinan Madrasah</div>
+            <div class="judul-seksi"><span>🏛️</span> Pimpinan Madrasah</div>
             <div class="grid-guru" id="areaPimpinan"></div>
         </div>
 
         <div class="kategori-seksi">
-            <div class="judul-seksi">Kewajiban Mengajar Sesi Ini</div>
+            <div class="judul-seksi"><span>📖</span> Kewajiban Mengajar Sesi Ini</div>
             <div class="grid-guru" id="areaWajib"></div>
         </div>
 
         <div class="kategori-seksi">
-            <div class="judul-seksi">Bebas & Piket</div>
+            <div class="judul-seksi"><span>☕</span> Bebas & Piket</div>
             <div class="grid-guru" id="areaBebas"></div>
         </div>
     </div>
@@ -481,6 +378,22 @@
         let kalenderBulanNav = 0;
         let kalenderTahunNav = 0;
         let activeCalendarTarget = 'tglAbsen';
+
+        // Fungsi Bantuan untuk UI Badge
+        function getBadgeClass(status) {
+            if (status === 'Sakit' || status === 'Izin') return 'bg-orange';
+            if (status === 'Alpa') return 'bg-red';
+            if (status === 'Bantu') return 'bg-blue';
+            return 'd-none';
+        }
+
+        function getBadgeText(status) {
+            if (status === 'Sakit') return 'SAKIT';
+            if (status === 'Izin') return 'IZIN';
+            if (status === 'Alpa') return 'ALPA';
+            if (status === 'Bantu') return 'INVAL';
+            return '';
+        }
 
         window.onload = async function() {
             if ('serviceWorker' in navigator) {
@@ -842,19 +755,17 @@
                 const kartu = document.createElement("div");
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
+
+                // Poin Tambahan: Menyorot Guru Piket
+                if (isPiketSesiIni) {
+                    kartu.classList.add("kartu-piket");
+                }
                 
                 if (statusAwal === "Hadir" || statusAwal === "Standby") kartu.classList.add("status-hadir");
                 else if (statusAwal === "Bantu") kartu.classList.add("status-bantu");
                 else if (statusAwal === "Sakit") kartu.classList.add("status-sakit");
                 else if (statusAwal === "Izin") kartu.classList.add("status-izin");
                 else if (statusAwal === "Alpa") kartu.classList.add("status-alpa");
-
-                let barColor = "#c7c7cc";
-                let barWidth = "100%";
-                if (statusAwal === "Hadir" || statusAwal === "Standby") { barColor = "var(--theme-green)"; barWidth = "100%"; }
-                else if (statusAwal === "Bantu") { barColor = "var(--ios-blue)"; barWidth = "100%"; }
-                else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
-                else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
 
                 if (kategoriTugas === "WAJIB") {
                     kartu.onclick = () => {
@@ -871,7 +782,10 @@
                         <img src="${fotoUrl}" alt="${namaAman}">
                     </div>
                     <div class="info-bawah">
-                        <h3>${nama}</h3>
+                        <h3>
+                            ${nama} 
+                            <span id="badge-${noHp}" class="badge-status ${getBadgeClass(statusAwal)}">${getBadgeText(statusAwal)}</span>
+                        </h3>
                         <p class="info-jadwal">${textInfo}</p>
                     </div>
                     <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
@@ -879,9 +793,6 @@
                         <div class="opt-sakit" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Sakit', event)">Sakit</div>
                         <div class="opt-izin" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Izin', event)">Izin</div>
                         <div class="opt-alpa" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Alpa', event)">Alpa</div>
-                    </div>
-                    <div class="wrapper-loading-bar" style="display:none;">
-                        <div class="loading-bar-isi" id="bar-${noHp}" style="width: ${barWidth}; background-color: ${barColor};"></div>
                     </div>
                 `;
 
@@ -921,6 +832,7 @@
             
             const elemenCard = document.getElementById(`card-${noHp}`);
             const menu = document.getElementById(`menu-${noHp}`);
+            const badge = document.getElementById(`badge-${noHp}`); // Reference badge
             if (menu) menu.style.display = 'none';
             elemenCard.classList.remove('menu-active');
 
@@ -969,6 +881,13 @@
                     } else if (statusDipilih === "Alpa") {
                         elemenCard.classList.add("status-alpa");
                     }
+
+                    // Update UI Badge
+                    if (badge) {
+                        badge.className = `badge-status ${getBadgeClass(statusDipilih)}`;
+                        badge.innerText = getBadgeText(statusDipilih);
+                    }
+
                 } else {
                     alert("Gagal menyimpan data: " + hasilSaves.message);
                 }
