@@ -1,15 +1,16 @@
 {
   "name": "Sistem Presensi Madrasah",
   "short_name": "Presensi",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f2f2f7",
+  "background_color": "#ffffff",
   "theme_color": "#0c5c2d",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "any",
-      "type": "image/png"
+      "src": "./icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
