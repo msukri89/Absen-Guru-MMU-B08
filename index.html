@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v26</title>
+    <title>Presensi Madrasah v27</title>
+    <!-- Koneksi ke berkas manifes PWA Desktop dan Ikon -->
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#0c5c2d">
     <style>
         :root {
@@ -17,6 +20,7 @@
             --ios-text: #1c1c1e;
             --ios-subtext: #8e8e93;
             --theme-green: #0c5c2d; 
+            --ios-purple: #5856d6;
         }
 
         body {
@@ -116,20 +120,22 @@
         .input-group-vertical {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
             font-size: 11px;
             color: var(--ios-subtext);
             text-align: left;
         }
 
-        .input-group-vertical input {
+        .kalender-tombol-palsu {
             padding: 5px 8px;
             font-size: 12px;
+            font-weight: 600;
             border-radius: 6px;
             border: 1px solid #c7c7cc;
             background: #f8f8f8;
-            outline: none;
-            font-family: inherit;
+            cursor: pointer;
+            color: var(--ios-text);
+            text-align: center;
         }
 
         button.btn-laporan {
@@ -315,6 +321,7 @@
         .status-bantu { border-color: var(--ios-blue); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
         .status-alpa { border-color: var(--ios-red); opacity: 0.7; filter: grayscale(50%); }
+        .status-tukar { border-color: var(--ios-purple); border-style: dashed; transform: scale(1.02); box-shadow: 0 4px 12px rgba(88, 86, 214, 0.2); }
 
         /* JENDELA MODAL OVERLAY DINAMIS */
         .modal-overlay {
@@ -333,7 +340,6 @@
         .btn-tutup { background: transparent; color: var(--ios-red); border: none; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
         .btn-standby:active, .btn-bantu:active, .btn-batal:active { opacity: 0.7; }
         
-        /* Gaya Tombol Sesi Kustom di Dalam Modal */
         .btn-pilih-sesi {
             background-color: #f2f2f7; color: var(--ios-text); border: 1px solid transparent; 
             padding: 12px 15px; border-radius: 10px; font-size: 13px; font-weight: 600; 
@@ -350,9 +356,10 @@
                 <img src="logo.png" alt="Logo Madrasah" class="logo-tengah">
                 
                 <div class="tanggal-display">
-                    <div class="datepicker-wrapper" onclick="bukaModalKalender()">
+                    <!-- Memanggil modal khusus dengan parameter target elemen -->
+                    <div class="datepicker-wrapper" onclick="bukaModalKalender('tglAbsen')">
                         <span id="teksTanggal">Memuat tanggal...</span>
-                        <input type="date" id="tglAbsen" style="position:absolute; visibility:hidden; width:0; height:0;">
+                        <input type="date" id="tglAbsen" style="display:none;">
                     </div>
                     <button class="btn-hijri" onclick="ubahHijri(-1)">-</button>
                     <button class="btn-hijri" onclick="ubahHijri(0)">⟳</button>
@@ -365,11 +372,17 @@
             <div class="periode-box">
                 <div class="input-group-vertical">
                     <label>Periode Dari:</label>
-                    <input type="date" id="tglMulai">
+                    <div class="kalender-tombol-palsu" onclick="bukaModalKalender('tglMulai')">
+                        <span id="teksTglMulai">--/--/----</span>
+                        <input type="date" id="tglMulai" style="display:none;">
+                    </div>
                 </div>
                 <div class="input-group-vertical">
                     <label>Periode Sampai:</label>
-                    <input type="date" id="tglAkhir">
+                    <div class="kalender-tombol-palsu" onclick="bukaModalKalender('tglAkhir')">
+                        <span id="teksTglAkhir">--/--/----</span>
+                        <input type="date" id="tglAkhir" style="display:none;">
+                    </div>
                 </div>
                 <button class="btn-laporan" onclick="generateLaporan()">Generate Laporan</button>
             </div>
@@ -422,6 +435,7 @@
         </div>
     </div>
 
+    <!-- MODAL POP-UP KUSTOM KALENDER UNIVERSAL -->
     <div id="modalKalender" class="modal-overlay">
         <div class="modal-content" style="width: 310px; padding: 15px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -447,12 +461,12 @@
         let activeHp = "";
         let activeNama = "";
         
-        // Navigasi internal kalender kustom
+        // Pengendali Kalender Dinamis
         let kalenderBulanNav = 0;
         let kalenderTahunNav = 0;
+        let activeCalendarTarget = 'tglAbsen';
 
         window.onload = async function() {
-            // Registrasi Service Worker secara otomatis untuk PWA Desktop
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA SW Registered.'));
             }
@@ -517,6 +531,10 @@
             }
             document.getElementById("tglMulai").valueAsDate = tglMulai;
             document.getElementById("tglAkhir").valueAsDate = tglAkhir;
+
+            const formatDisplay = (d) => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+            document.getElementById("teksTglMulai").innerText = formatDisplay(tglMulai);
+            document.getElementById("teksTglAkhir").innerText = formatDisplay(tglAkhir);
         }
 
         function handlePerubahanTanggal() {
@@ -584,9 +602,11 @@
             tampilkanJadwal();
         }
 
-        // --- MANAJEMEN KALENDER KUSTOM ---
-        function bukaModalKalender() {
-            let tglAktif = new Date(document.getElementById("tglAbsen").value || new Date());
+        // --- MANAJEMEN KALENDER KUSTOM TERPADU ---
+        function bukaModalKalender(targetId) {
+            activeCalendarTarget = targetId;
+            let tglAktifVal = document.getElementById(targetId).value;
+            let tglAktif = tglAktifVal ? new Date(tglAktifVal) : new Date();
             kalenderBulanNav = tglAktif.getMonth();
             kalenderTahunNav = tglAktif.getFullYear();
             renderGridKalender(kalenderBulanNav, kalenderTahunNav);
@@ -621,8 +641,9 @@
                 grid.appendChild(kotakKosong);
             }
             
-            const tglTerpilihStr = document.getElementById("tglAbsen").value;
-            const tglTerpilihObj = new Date(tglTerpilihStr);
+            const tglTerpilihStr = document.getElementById(activeCalendarTarget).value;
+            const tglTerpilihObj = tglTerpilihStr ? new Date(tglTerpilihStr) : new Date();
+            const hariIniRiil = new Date(); // Referensi hari ini secara fisik
             
             for (let d = 1; d <= jumlahHari; d++) {
                 const tombolHari = document.createElement("div");
@@ -634,32 +655,47 @@
                 tombolHari.style.fontSize = "13px";
                 tombolHari.style.fontWeight = "600";
                 
-                if (tglTerpilihObj.getDate() === d && tglTerpilihObj.getMonth() === bulan && tglTerpilihObj.getFullYear() === tahun) {
+                let isSelected = (tglTerpilihObj.getDate() === d && tglTerpilihObj.getMonth() === bulan && tglTerpilihObj.getFullYear() === tahun);
+                let isToday = (hariIniRiil.getDate() === d && hariIniRiil.getMonth() === bulan && hariIniRiil.getFullYear() === tahun);
+
+                if (isSelected) {
                     tombolHari.style.backgroundColor = "var(--theme-green)";
                     tombolHari.style.color = "white";
+                } else if (isToday) {
+                    // Warna khusus untuk Hari Ini (Hijau Muda Elegan)
+                    tombolHari.style.backgroundColor = "#c8e6c9";
+                    tombolHari.style.color = "var(--theme-green)";
                 } else {
                     tombolHari.style.color = "var(--ios-text)";
-                    tombolHari.onmouseover = () => tombolHari.style.backgroundColor = "#e5e5ea";
-                    tombolHari.onmouseout = () => {
-                        if (!(tglTerpilihObj.getDate() === d && tglTerpilihObj.getMonth() === bulan && tglTerpilihObj.getFullYear() === tahun)) {
-                            tombolHari.style.backgroundColor = "transparent";
-                        }
-                    };
+                    tombolHari.style.backgroundColor = "transparent";
                 }
+                
+                tombolHari.onmouseover = () => { if(!isSelected) tombolHari.style.backgroundColor = "#e5e5ea"; };
+                tombolHari.onmouseout = () => { 
+                    if(!isSelected) tombolHari.style.backgroundColor = isToday ? "#c8e6c9" : "transparent"; 
+                };
                 
                 tombolHari.onclick = () => {
                     const mStr = String(bulan + 1).padStart(2, '0');
                     const dStr = String(d).padStart(2, '0');
-                    document.getElementById("tglAbsen").value = `${tahun}-${mStr}-${dStr}`;
+                    const nilaiTglBaru = `${tahun}-${mStr}-${dStr}`;
+                    document.getElementById(activeCalendarTarget).value = nilaiTglBaru;
+                    
+                    if (activeCalendarTarget === 'tglAbsen') {
+                        handlePerubahanTanggal();
+                    } else {
+                        // Memperbarui UI Teks untuk menu laporan
+                        const teksIdTarget = activeCalendarTarget === 'tglMulai' ? 'teksTglMulai' : 'teksTglAkhir';
+                        document.getElementById(teksIdTarget).innerText = `${dStr}/${mStr}/${tahun}`;
+                    }
                     tutupModalKalender();
-                    handlePerubahanTanggal();
                 };
                 
                 grid.appendChild(tombolHari);
             }
         }
 
-        // --- FUNGSI KONTROL JENDELA DINAMIS DENGAN KUNCI INVALIDASI ---
+        // --- FUNGSI KONTROL JENDELA DINAMIS ---
         function bukaModalAksi(noHp, nama, kategoriTugas) {
             activeHp = noHp;
             activeNama = nama;
@@ -683,7 +719,7 @@
             let adaKelasKosong = false;
             listHpWajibSesiIni.forEach(hpW => {
                 const logW = dataSemuaLog.find(l => l.tanggal === stringTanggal && l.sesi === sesiNomor.toString() && cleanNumber(l.noHp) === cleanNumber(hpW));
-                if (logW && (logW.status === "Sakit" || logW.status === "Izin" || logW.status === "Alpa")) {
+                if (logW && (logW.status === "Sakit" || logW.status === "Izin" || logW.status === "Alpa" || logW.status === "Tukar Jam")) {
                     adaKelasKosong = true;
                 }
             });
@@ -736,7 +772,6 @@
             const hariDipilih = susunanHari[objekTanggal.getDay()];
             const sesiDipilih = document.getElementById("pilihSesi").value;
             
-            // Perbarui label teks sesi kustom di antarmuka utama secara dinamis
             const daftarTeksSesi = {
                 "1": "Sesi 1 (07.00 - 08.20)",
                 "2": "Sesi 2 (08.50 - 10.10)",
@@ -800,6 +835,7 @@
                 else if (statusAwal === "Sakit") kartu.classList.add("status-sakit");
                 else if (statusAwal === "Izin") kartu.classList.add("status-izin");
                 else if (statusAwal === "Alpa") kartu.classList.add("status-alpa");
+                else if (statusAwal === "Tukar Jam") kartu.classList.add("status-tukar");
 
                 let barColor = "#c7c7cc";
                 let barWidth = "100%";
@@ -807,6 +843,7 @@
                 else if (statusAwal === "Bantu") { barColor = "var(--ios-blue)"; barWidth = "100%"; }
                 else if (statusAwal === "Sakit" || statusAwal === "Izin") { barColor = "var(--ios-orange)"; barWidth = "60%"; }
                 else if (statusAwal === "Alpa") { barColor = "var(--ios-red)"; barWidth = "20%"; }
+                else if (statusAwal === "Tukar Jam") { barColor = "var(--ios-purple)"; barWidth = "100%"; }
 
                 if (kategoriTugas === "WAJIB") {
                     kartu.onclick = () => {
@@ -823,6 +860,7 @@
                         <img src="${fotoUrl}" alt="${namaAman}">
                         <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
                         <div class="dropdown-menu" id="menu-${noHp}">
+                            <div style="color: var(--ios-purple); font-weight: bold;" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Tukar Jam', event)">Tukar Jam</div>
                             <div class="opt-sakit" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Sakit', event)">Sakit</div>
                             <div class="opt-izin" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Izin', event)">Izin</div>
                             <div class="opt-alpa" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Alpa', event)">Alpa</div>
@@ -900,7 +938,7 @@
                         dataSemuaLog.push({ tanggal: tanggalMasehi, sesi: sesiNomor.toString(), noHp: noHp, status: statusDipilih });
                     }
 
-                    elemenCard.classList.remove("status-hadir", "status-bantu", "status-izin", "status-sakit", "status-alpa");
+                    elemenCard.classList.remove("status-hadir", "status-bantu", "status-izin", "status-sakit", "status-alpa", "status-tukar");
 
                     if (statusDipilih === "Hadir" || statusDipilih === "Standby") {
                         elemenCard.classList.add("status-hadir");
@@ -918,6 +956,10 @@
                         elemenCard.classList.add("status-alpa");
                         elemenBar.style.width = "20%";
                         elemenBar.style.backgroundColor = "var(--ios-red)";
+                    } else if (statusDipilih === "Tukar Jam") {
+                        elemenCard.classList.add("status-tukar");
+                        elemenBar.style.width = "100%";
+                        elemenBar.style.backgroundColor = "var(--ios-purple)";
                     } else if (statusDipilih === "Belum Absen") {
                         elemenBar.style.width = "100%";
                         elemenBar.style.backgroundColor = "#c7c7cc";
