@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v34</title>
+    <title>Presensi Madrasah v35</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -41,7 +41,6 @@
             background-color: var(--ios-bg);
             padding: 18px 0;
             margin-bottom: 10px;
-            /* Border bawah dihapus agar terkesan satu halaman utuh */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -67,14 +66,13 @@
             background: #e5e5ea; padding: 3px 8px; border-radius: 8px; width: max-content;
         }
 
-        /* Blok Warna Hijau Untuk Kalender Hijriah */
         #hijriRow {
             background-color: var(--theme-green);
             color: white;
         }
 
         .btn-hijri {
-            background: none; border: none; color: white; /* Warna tombol jadi putih */
+            background: none; border: none; color: white; 
             font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 12px;
         }
 
@@ -86,7 +84,7 @@
         }
 
         .jam-display {
-            font-size: 17px; /* Angka jam diperbesar */
+            font-size: 17px; 
             font-weight: 700; color: var(--theme-green);
             letter-spacing: 0.5px; font-variant-numeric: tabular-nums;
         }
@@ -136,7 +134,6 @@
             border-radius: 16px; padding: 12px; height: 100%; box-sizing: border-box; overflow: hidden;
         }
         
-        /* Modifikasi Blok Warna Hijau Untuk Header */
         .judul-seksi {
             font-size: 12px; font-weight: 700; color: white;
             background-color: var(--theme-green);
@@ -146,7 +143,8 @@
         }
 
         .grid-guru {
-            flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: hidden; 
+            flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: auto; 
+            padding-right: 5px; /* Memberi ruang untuk scrollbar jika jadwal sangat padat */
         }
 
         #areaPimpinan { grid-template-columns: 1fr; }
@@ -227,7 +225,6 @@
         .opt-izin { color: var(--ios-orange); }
         .opt-alpa { color: var(--ios-red); }
 
-        /* Status Warna Kartu */
         .status-hadir { border-color: var(--ios-green); box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2); }
         .status-bantu { border-color: var(--ios-blue); box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2); }
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
@@ -277,7 +274,6 @@
                 </div>
             </div>
 
-            <!-- Menghilangkan label "Waktu Sistem" dan membesarkan teks jam -->
             <div class="jam-card">
                 <div id="liveClock" class="jam-display">00:00:00</div>
             </div>
@@ -319,7 +315,6 @@
     
     <div class="main-board">
         <div class="kategori-seksi">
-            <!-- Ikon dihapus, desain menjadi blok warna hijau berpusat -->
             <div class="judul-seksi">Pimpinan Madrasah</div>
             <div class="grid-guru" id="areaPimpinan"></div>
         </div>
@@ -723,6 +718,11 @@
             const jadwalSesiIni = dataSemuaJadwal.filter(b => b[1] === hariDipilih && b[2].toString() === sesiDipilih);
             let listHpWajibAtauPiket = jadwalSesiIni.map(j => j[5]);
 
+            // Array penampung untuk kebutuhan sorting
+            let kartuPimpinan = [];
+            let kartuWajib = [];
+            let kartuBebas = [];
+
             dataSemuaGuru.forEach(guru => {
                 const noHp = guru[0] ? guru[0].toString().trim() : "";
                 const nama = guru[1] ? guru[1].toString().trim() : "Tanpa Nama";
@@ -731,12 +731,13 @@
 
                 const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 const detailJadwal = jadwalSesiIni.find(j => j[5] == noHp);
+                let namaKelasTugas = detailJadwal ? detailJadwal[3] : "";
                 
                 let textInfo = role.toUpperCase() === "PIMPINAN" ? "Standby Kantor" : "Jam Bebas";
-                if (detailJadwal) { textInfo = `${detailJadwal[3]} - ${detailJadwal[4]}`; }
+                if (detailJadwal) { textInfo = `${namaKelasTugas} - ${detailJadwal[4]}`; }
 
                 let isPiketSesiIni = false;
-                if (detailJadwal && detailJadwal[3] && detailJadwal[3].toString().toUpperCase().includes("PIKET")) {
+                if (namaKelasTugas && namaKelasTugas.toString().toUpperCase().includes("PIKET")) {
                     isPiketSesiIni = true;
                 }
                 
@@ -802,13 +803,34 @@
                 `;
 
                 if (role.toUpperCase() === "PIMPINAN") {
-                    document.getElementById("areaPimpinan").appendChild(kartu);
+                    kartuPimpinan.push(kartu);
                 } else if (kategoriTugas === "WAJIB" || kategoriTugas === "PIKET") {
-                    document.getElementById("areaWajib").appendChild(kartu);
+                    // Logic Penentuan Kunci Sorting (Shifir -> Kelas Reguler -> Piket)
+                    let sortKey = "Z_ZZZ"; 
+                    if (namaKelasTugas) {
+                        let kelasUpper = namaKelasTugas.toString().toUpperCase();
+                        if (kelasUpper.includes("PIKET")) {
+                            sortKey = "Z_PIKET"; // Z_ membuatnya selalu di bawah
+                        } else if (kelasUpper.includes("SIFIR")) {
+                            sortKey = "A_" + kelasUpper; // A_ membuatnya selalu di atas
+                        } else {
+                            sortKey = "B_" + kelasUpper; // B_ untuk kelas reguler (diurutkan abjad: B_KELAS 1, B_KELAS 2)
+                        }
+                    }
+                    kartuWajib.push({ element: kartu, key: sortKey });
                 } else {
-                    document.getElementById("areaBebas").appendChild(kartu);
+                    kartuBebas.push(kartu);
                 }
             });
+
+            // Menyisipkan kartu-kartu yang sudah dikumpulkan ke dalam DOM
+            kartuPimpinan.forEach(k => document.getElementById("areaPimpinan").appendChild(k));
+            
+            // Eksekusi pengurutan khusus untuk kolom "Kewajiban Mengajar"
+            kartuWajib.sort((a, b) => a.key.localeCompare(b.key));
+            kartuWajib.forEach(item => document.getElementById("areaWajib").appendChild(item.element));
+            
+            kartuBebas.forEach(k => document.getElementById("areaBebas").appendChild(k));
         }
 
         function bukaMenu(event, noHp) {
