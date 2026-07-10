@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v33</title>
+    <title>Presensi Madrasah v34</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -41,7 +41,7 @@
             background-color: var(--ios-bg);
             padding: 18px 0;
             margin-bottom: 10px;
-            border-bottom: 1px solid rgba(0,0,0,0.05); 
+            /* Border bawah dihapus agar terkesan satu halaman utuh */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -67,20 +67,27 @@
             background: #e5e5ea; padding: 3px 8px; border-radius: 8px; width: max-content;
         }
 
+        /* Blok Warna Hijau Untuk Kalender Hijriah */
+        #hijriRow {
+            background-color: var(--theme-green);
+            color: white;
+        }
+
         .btn-hijri {
-            background: none; border: none; color: var(--theme-green);
+            background: none; border: none; color: white; /* Warna tombol jadi putih */
             font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 12px;
         }
 
         .jam-card {
-            background: var(--ios-card); padding: 8px 12px; border-radius: 12px;
+            background: var(--ios-card); padding: 0 15px; border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex;
             flex-direction: column; justify-content: center; align-items: center;
-            height: 46px; box-sizing: border-box; min-width: 85px;
+            height: 46px; box-sizing: border-box; min-width: 90px;
         }
 
         .jam-display {
-            font-size: 12px; font-weight: 700; color: var(--theme-green);
+            font-size: 17px; /* Angka jam diperbesar */
+            font-weight: 700; color: var(--theme-green);
             letter-spacing: 0.5px; font-variant-numeric: tabular-nums;
         }
 
@@ -129,11 +136,13 @@
             border-radius: 16px; padding: 12px; height: 100%; box-sizing: border-box; overflow: hidden;
         }
         
+        /* Modifikasi Blok Warna Hijau Untuk Header */
         .judul-seksi {
-            font-size: 12px; font-weight: 700; color: var(--ios-subtext);
+            font-size: 12px; font-weight: 700; color: white;
+            background-color: var(--theme-green);
             margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-            flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 5px;
-            display: flex; align-items: center; gap: 6px; /* Untuk penempatan ikon */
+            flex-shrink: 0; padding: 8px 12px; border-radius: 8px;
+            text-align: center; display: block;
         }
 
         .grid-guru {
@@ -153,7 +162,6 @@
             transition: all 0.2s ease; cursor: pointer; z-index: 1;
         }
 
-        /* Hover Effect Interaktif */
         .kartu-guru:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0,0,0,0.1);
@@ -161,7 +169,6 @@
 
         .kartu-guru.menu-active { z-index: 99 !important; }
 
-        /* Pembeda Khusus Guru Piket */
         .kartu-piket {
             background: linear-gradient(135deg, #ffffff 0%, #fffdf5 100%);
             border: 1px dashed rgba(255, 193, 7, 0.5);
@@ -190,7 +197,6 @@
             line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
-        /* Lencana Status (Badges) */
         .badge-status {
             font-size: 8px; padding: 2px 4px; border-radius: 4px;
             font-weight: 800; letter-spacing: 0.3px; color: white;
@@ -264,15 +270,15 @@
                 </div>
                 <div id="hijriRow" class="tanggal-display">
                     <span id="teksHijri">Memuat...</span>
-                    <span style="color: #c7c7cc; margin: 0 1px;">|</span>
+                    <span style="color: rgba(255,255,255,0.5); margin: 0 1px;">|</span>
                     <button class="btn-hijri" onclick="ubahHijri(-1, event)">-</button>
                     <button class="btn-hijri" onclick="ubahHijri(0, event)">⟳</button>
                     <button class="btn-hijri" onclick="ubahHijri(1, event)">+</button>
                 </div>
             </div>
 
+            <!-- Menghilangkan label "Waktu Sistem" dan membesarkan teks jam -->
             <div class="jam-card">
-                <span style="font-size: 8px; color: var(--ios-subtext); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px;">Waktu Sistem</span>
                 <div id="liveClock" class="jam-display">00:00:00</div>
             </div>
         </div>
@@ -313,17 +319,18 @@
     
     <div class="main-board">
         <div class="kategori-seksi">
-            <div class="judul-seksi"><span>🏛️</span> Pimpinan Madrasah</div>
+            <!-- Ikon dihapus, desain menjadi blok warna hijau berpusat -->
+            <div class="judul-seksi">Pimpinan Madrasah</div>
             <div class="grid-guru" id="areaPimpinan"></div>
         </div>
 
         <div class="kategori-seksi">
-            <div class="judul-seksi"><span>📖</span> Kewajiban Mengajar Sesi Ini</div>
+            <div class="judul-seksi">Kewajiban Mengajar Sesi Ini</div>
             <div class="grid-guru" id="areaWajib"></div>
         </div>
 
         <div class="kategori-seksi">
-            <div class="judul-seksi"><span>☕</span> Bebas & Piket</div>
+            <div class="judul-seksi">Bebas & Piket</div>
             <div class="grid-guru" id="areaBebas"></div>
         </div>
     </div>
@@ -379,7 +386,6 @@
         let kalenderTahunNav = 0;
         let activeCalendarTarget = 'tglAbsen';
 
-        // Fungsi Bantuan untuk UI Badge
         function getBadgeClass(status) {
             if (status === 'Sakit' || status === 'Izin') return 'bg-orange';
             if (status === 'Alpa') return 'bg-red';
@@ -756,7 +762,6 @@
                 kartu.className = "kartu-guru"; 
                 kartu.id = `card-${noHp}`;
 
-                // Poin Tambahan: Menyorot Guru Piket
                 if (isPiketSesiIni) {
                     kartu.classList.add("kartu-piket");
                 }
@@ -832,7 +837,7 @@
             
             const elemenCard = document.getElementById(`card-${noHp}`);
             const menu = document.getElementById(`menu-${noHp}`);
-            const badge = document.getElementById(`badge-${noHp}`); // Reference badge
+            const badge = document.getElementById(`badge-${noHp}`); 
             if (menu) menu.style.display = 'none';
             elemenCard.classList.remove('menu-active');
 
@@ -882,7 +887,6 @@
                         elemenCard.classList.add("status-alpa");
                     }
 
-                    // Update UI Badge
                     if (badge) {
                         badge.className = `badge-status ${getBadgeClass(statusDipilih)}`;
                         badge.innerText = getBadgeText(statusDipilih);
