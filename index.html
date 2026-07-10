@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v29</title>
+    <title>Presensi Madrasah v30</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -27,52 +27,52 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--ios-bg);
             margin: 0;
-            padding: 0 20px 20px 20px; 
+            padding: 0 15px 15px 15px; 
             color: var(--ios-text);
-        }
-
-        .sticky-wrapper {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: var(--ios-bg);
-            padding-top: 20px;
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(0,0,0,0.05); 
-        }
-
-        .header-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin-bottom: 20px;
-            min-height: 160px; 
-        }
-
-        .teks-header {
+            height: 100vh;
+            overflow: hidden; /* Mengunci layar agar tidak bisa di-scroll */
             display: flex;
             flex-direction: column;
+        }
+
+        /* 1. NAVBAR HORIZONTAL */
+        .sticky-wrapper {
+            flex-shrink: 0;
+            background-color: var(--ios-bg);
+            padding: 15px 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.05); 
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            text-align: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .logo-tengah {
-            width: 150px; 
-            height: auto;
+            height: 40px; 
+            width: auto;
             object-fit: contain;
-            margin-bottom: 10px;
         }
         
+        .waktu-box {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
         .tanggal-display {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--ios-subtext);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             background: #e5e5ea;
-            padding: 6px 14px;
+            padding: 4px 10px;
             border-radius: 20px;
         }
 
@@ -84,51 +84,60 @@
         }
 
         .btn-hijri {
-            background: none;
-            border: none;
-            color: var(--theme-green);
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0 5px;
-            font-size: 16px;
+            background: none; border: none; color: var(--theme-green);
+            font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 14px;
         }
 
         .jam-display {
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--ios-text);
-            margin-top: 6px;
             letter-spacing: 1px;
             font-variant-numeric: tabular-nums;
+            margin-left: 10px;
         }
 
-        .periode-box {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
+        .header-right {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .kontrol-panel {
             background: var(--ios-card);
-            padding: 10px;
+            padding: 8px 15px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            width: 160px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .kontrol-panel:active { background-color: #e5e5ea; }
+
+        .periode-box {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            gap: 10px;
+            background: var(--ios-card);
+            padding: 8px 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .input-group-vertical {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            font-size: 11px;
+            font-size: 10px;
             color: var(--ios-subtext);
-            text-align: left;
         }
 
         .kalender-tombol-palsu {
             padding: 5px 8px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             border-radius: 6px;
             border: 1px solid #c7c7cc;
@@ -139,7 +148,7 @@
         }
 
         button.btn-laporan {
-            padding: 7px 10px;
+            padding: 6px 10px;
             font-size: 11px;
             background: var(--theme-green);
             color: white;
@@ -147,81 +156,90 @@
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 4px;
+            height: 26px;
             transition: background 0.2s;
-        }
-
-        .kontrol-panel {
-            background: var(--ios-card);
-            padding: 12px 24px;
-            border-radius: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            max-width: 400px;
-            margin: 0 auto;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .kontrol-panel:active {
-            background-color: #f2f2f7;
         }
 
         #loading {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--theme-green);
             text-align: center;
-            margin: 10px 0;
+            margin-bottom: 10px;
             font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* 2. LAYOUT GRID 3 KOLOM */
+        .main-board {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 2fr 5fr 3fr; /* Pembagian rasio layar */
+            gap: 15px;
+            overflow: hidden; 
         }
 
         .kategori-seksi { 
-            margin-bottom: 30px; 
-            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            padding: 12px;
+            height: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         
         .judul-seksi {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--ios-subtext);
             margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding-bottom: 5px;
         }
 
         .grid-guru {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 15px;
-            border-radius: 16px;
-            min-height: 80px;
+            flex-grow: 1;
+            display: grid;
+            align-content: start;
+            gap: 10px;
+            overflow-y: hidden; /* Dilarang scroll */
         }
 
+        /* Konfigurasi kepadatan sub-kolom */
+        #areaPimpinan { grid-template-columns: 1fr; }
+        #areaWajib { grid-template-columns: repeat(2, 1fr); }
+        #areaBebas { grid-template-columns: 1fr; }
+
+        /* 3. MICRO CARDS AVATAR */
         .kartu-guru {
             background: var(--ios-card);
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            width: 130px;
+            width: 100%;
+            height: 52px;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            align-items: center;
+            padding: 6px 10px;
             border: 2px solid transparent;
             position: relative;
+            box-sizing: border-box;
             transition: all 0.2s ease;
             cursor: pointer;
         }
 
         .foto-wadah {
-            width: 100%;
-            aspect-ratio: 3 / 4;
-            border-radius: 10px 10px 0 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             overflow: hidden;
-            position: relative;
+            flex-shrink: 0;
+            margin-right: 10px;
+            background: #e5e5ea;
         }
 
         .foto-wadah img {
@@ -230,64 +248,19 @@
             object-fit: cover;
         }
 
-        .titik-tiga {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: rgba(255, 255, 255, 0.85);
-            color: var(--ios-text);
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-            z-index: 2;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 35px;
-            right: 6px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        .dropdown-menu div {
-            padding: 8px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            border-bottom: 1px solid #f2f2f7;
-            text-align: left; 
-        }
-        
-        .dropdown-menu div:last-child { border-bottom: none; }
-        .dropdown-menu div:hover { background-color: #f2f2f7; }
-        .opt-sakit { color: var(--ios-orange); }
-        .opt-izin { color: var(--ios-orange); }
-        .opt-alpa { color: var(--ios-red); }
-
         .info-bawah {
-            padding: 8px;
-            text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: center;
+            text-align: left;
             flex-grow: 1;
+            padding: 0;
+            width: calc(100% - 50px);
         }
 
         .kartu-guru h3 {
-            font-size: 12px;
-            margin: 0 0 4px 0;
+            font-size: 11px;
+            margin: 0 0 2px 0;
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
@@ -295,18 +268,23 @@
         }
 
         .info-jadwal {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--ios-subtext);
-            margin: 0 0 8px 0;
-            line-height: 1.2;
-            min-height: 24px;
+            margin: 0;
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .wrapper-loading-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
             width: 100%;
             background-color: #e5e5ea;
-            border-radius: 3px;
-            height: 5px;
+            height: 4px;
+            border-radius: 0 0 10px 10px;
             overflow: hidden;
         }
 
@@ -316,13 +294,50 @@
             transition: width 0.4s ease, background-color 0.4s ease;
         }
 
+        .titik-tiga {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            color: var(--ios-subtext);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 0px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .dropdown-menu div { padding: 8px 16px; font-size: 12px; font-weight: 600; border-bottom: 1px solid #f2f2f7; text-align: left; }
+        .dropdown-menu div:last-child { border-bottom: none; }
+        .dropdown-menu div:hover { background-color: #f2f2f7; }
+        .opt-sakit { color: var(--ios-orange); }
+        .opt-izin { color: var(--ios-orange); }
+        .opt-alpa { color: var(--ios-red); }
+
         /* Status Warna Kartu */
-        .status-hadir { border-color: var(--ios-green); transform: scale(1.02); box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
-        .status-bantu { border-color: var(--ios-blue); transform: scale(1.02); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
+        .status-hadir { border-color: var(--ios-green); box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2); }
+        .status-bantu { border-color: var(--ios-blue); box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2); }
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
         .status-alpa { border-color: var(--ios-red); opacity: 0.7; filter: grayscale(50%); }
 
-        /* JENDELA MODAL OVERLAY DINAMIS */
+        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.5); z-index: 999;
@@ -338,7 +353,6 @@
         .btn-batal { background: var(--ios-subtext); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .btn-tutup { background: transparent; color: var(--ios-red); border: none; padding: 10px; font-weight: bold; width: 100%; cursor: pointer; }
         .btn-standby:active, .btn-bantu:active, .btn-batal:active { opacity: 0.7; }
-        
         .btn-pilih-sesi {
             background-color: #f2f2f7; color: var(--ios-text); border: 1px solid transparent; 
             padding: 12px 15px; border-radius: 10px; font-size: 13px; font-weight: 600; 
@@ -350,21 +364,28 @@
 <body>
 
     <div class="sticky-wrapper">
-        <div class="header-container">
-            <div class="teks-header">
-                <img src="logo.png" alt="Logo Madrasah" class="logo-tengah">
-                
+        <div class="header-left">
+            <img src="logo-app.png" alt="Logo Madrasah" class="logo-tengah">
+            <div class="waktu-box">
                 <div class="tanggal-display">
                     <div class="datepicker-wrapper" onclick="bukaModalKalender('tglAbsen')">
-                        <span id="teksTanggal">Memuat tanggal...</span>
+                        <span id="teksTanggal">Memuat...</span>
                         <input type="date" id="tglAbsen" style="display:none;">
                     </div>
                     <button class="btn-hijri" onclick="ubahHijri(-1)">-</button>
                     <button class="btn-hijri" onclick="ubahHijri(0)">⟳</button>
                     <button class="btn-hijri" onclick="ubahHijri(1)">+</button>
                 </div>
-                
                 <div id="liveClock" class="jam-display">00:00:00</div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="kontrol-panel" onclick="bukaModalSesi()">
+                <span style="font-size: 12px; font-weight: 600; color: var(--ios-subtext);">Sesi Aktif:</span>
+                <span id="teksSesiTerpilih" style="font-size: 13px; font-weight: 700; color: var(--theme-green); margin-left: 5px;">...</span>
+                <span style="color: var(--ios-subtext); font-size: 10px; margin-left: 5px;">▼</span>
+                <input type="hidden" id="pilihSesi" value="1">
             </div>
             
             <div class="periode-box">
@@ -382,33 +403,28 @@
                         <input type="date" id="tglAkhir" style="display:none;">
                     </div>
                 </div>
-                <button class="btn-laporan" onclick="generateLaporan()">Generate Laporan</button>
+                <button class="btn-laporan" onclick="generateLaporan()">Laporan</button>
             </div>
-        </div>
-        
-        <div class="kontrol-panel" onclick="bukaModalSesi()">
-            <span style="font-size: 14px; font-weight: 600; color: var(--ios-subtext);">Sesi Aktif:</span>
-            <span id="teksSesiTerpilih" style="font-size: 14px; font-weight: 700; color: var(--theme-green); margin-left: 5px;">Memuat sesi...</span>
-            <span style="color: var(--ios-subtext); font-size: 11px; margin-left: auto;">▼</span>
-            <input type="hidden" id="pilihSesi" value="1">
         </div>
     </div>
 
     <div id="loading" style="display:none;">Sinkronisasi Data...</div>
     
-    <div class="kategori-seksi">
-        <div class="judul-seksi">Pimpinan Madrasah</div>
-        <div class="grid-guru" id="areaPimpinan"></div>
-    </div>
+    <div class="main-board">
+        <div class="kategori-seksi">
+            <div class="judul-seksi">Pimpinan Madrasah</div>
+            <div class="grid-guru" id="areaPimpinan"></div>
+        </div>
 
-    <div class="kategori-seksi">
-        <div class="judul-seksi">Guru yang Berkewajiban Mengajar (Sesi Ini)</div>
-        <div class="grid-guru" id="areaWajib"></div>
-    </div>
+        <div class="kategori-seksi">
+            <div class="judul-seksi">Kewajiban Mengajar Sesi Ini</div>
+            <div class="grid-guru" id="areaWajib"></div>
+        </div>
 
-    <div class="kategori-seksi">
-        <div class="judul-seksi">Guru Bebas / Cadangan Bantu</div>
-        <div class="grid-guru" id="areaBebas"></div>
+        <div class="kategori-seksi">
+            <div class="judul-seksi">Bebas & Piket</div>
+            <div class="grid-guru" id="areaBebas"></div>
+        </div>
     </div>
 
     <div id="modalAksi" class="modal-overlay">
@@ -433,7 +449,6 @@
         </div>
     </div>
 
-    <!-- MODAL POP-UP KUSTOM KALENDER UNIVERSAL -->
     <div id="modalKalender" class="modal-overlay">
         <div class="modal-content" style="width: 310px; padding: 15px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -723,7 +738,7 @@
 
             let tombolBantuHTML = `<button class="btn-bantu" onclick="pilihAksi('Bantu')">Bantu (Inval Kelas)</button>`;
             if (!adaKelasKosong) {
-                tombolBantuHTML = `<button class="btn-bantu" style="background-color:#c7c7cc; color:#8e8e93; cursor:not-allowed;" disabled>Inval Dikunci - Kelas Sudah Terisi Penuh</button>`;
+                tombolBantuHTML = `<button class="btn-bantu" style="background-color:#c7c7cc; color:#8e8e93; cursor:not-allowed;" disabled>Inval Dikunci - Kelas Terisi Penuh</button>`;
             }
 
             if (kategoriTugas === "PIKET") {
@@ -785,13 +800,13 @@
                 const noHp = guru[0] ? guru[0].toString().trim() : "";
                 const nama = guru[1] ? guru[1].toString().trim() : "Tanpa Nama";
                 const role = guru[2] ? guru[2].toString().trim() : "Guru Fan";
-                const fotoUrl = guru[4] || "https://dummyimage.com/300x400/cccccc/ffffff&text=No+Foto";
+                const fotoUrl = guru[4] || "https://dummyimage.com/100x100/cccccc/ffffff&text=Foto";
 
                 const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 const detailJadwal = jadwalSesiIni.find(j => j[5] == noHp);
                 
                 let textInfo = role.toUpperCase() === "PIMPINAN" ? "Standby Kantor" : "Jam Bebas";
-                if (detailJadwal) { textInfo = `${detailJadwal[3]}<br>${detailJadwal[4]}`; }
+                if (detailJadwal) { textInfo = `${detailJadwal[3]} - ${detailJadwal[4]}`; }
 
                 let isPiketSesiIni = false;
                 if (detailJadwal && detailJadwal[3] && detailJadwal[3].toString().toUpperCase().includes("PIKET")) {
@@ -846,19 +861,19 @@
                 kartu.innerHTML = `
                     <div class="foto-wadah">
                         <img src="${fotoUrl}" alt="${namaAman}">
-                        <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
-                        <div class="dropdown-menu" id="menu-${noHp}">
-                            <div class="opt-sakit" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Sakit', event)">Sakit</div>
-                            <div class="opt-izin" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Izin', event)">Izin</div>
-                            <div class="opt-alpa" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Alpa', event)">Alpa</div>
-                        </div>
                     </div>
                     <div class="info-bawah">
                         <h3>${nama}</h3>
                         <p class="info-jadwal">${textInfo}</p>
-                        <div class="wrapper-loading-bar">
-                            <div class="loading-bar-isi" id="bar-${noHp}" style="width: ${barWidth}; background-color: ${barColor};"></div>
-                        </div>
+                    </div>
+                    <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
+                    <div class="dropdown-menu" id="menu-${noHp}">
+                        <div class="opt-sakit" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Sakit', event)">Sakit</div>
+                        <div class="opt-izin" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Izin', event)">Izin</div>
+                        <div class="opt-alpa" onclick="kirimKeDatabaseSpreadsheet('${noHp}', '${namaAman}', 'Alpa', event)">Alpa</div>
+                    </div>
+                    <div class="wrapper-loading-bar">
+                        <div class="loading-bar-isi" id="bar-${noHp}" style="width: ${barWidth}; background-color: ${barColor};"></div>
                     </div>
                 `;
 
