@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v31</title>
+    <title>Presensi Madrasah v32</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -53,7 +53,6 @@
             gap: 12px;
         }
 
-        /* Poin 1: Logo Sudut Tepi Membulat Elegan */
         .logo-tengah {
             height: 44px; 
             width: auto;
@@ -67,7 +66,6 @@
             gap: 4px;
         }
 
-        /* Poin 5: Penataan Tanggal 2 Susun */
         .datepicker-wrapper {
             cursor: pointer;
             font-weight: 700;
@@ -93,7 +91,6 @@
             font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 12px;
         }
 
-        /* Poin 7: Jam Otomatis Menjadi Desain Kartu Header */
         .jam-card {
             background: var(--ios-card);
             padding: 8px 12px;
@@ -122,12 +119,11 @@
             gap: 12px;
         }
 
-        /* Poin 4: Penyeragaman Ukuran & Desain Sesi Dengan Kartu Laporan */
-       .kontrol-panel, .periode-box {
+        .kontrol-panel, .periode-box {
             display: flex; flex-direction: row; align-items: center;
             gap: 12px; background: var(--ios-card); padding: 8px 16px;
             border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            box-sizing: border-box; height: 52px; /* Lebih tinggi & lega */
+            box-sizing: border-box; height: 52px;
         }
 
         .kontrol-panel {
@@ -182,7 +178,8 @@
         .main-board {
             flex-grow: 1;
             display: grid;
-            grid-template-columns: 2fr 5fr 3fr; 
+            /* PERUBAHAN: Membagi grid menjadi proporsi 25% - 50% - 25% */
+            grid-template-columns: 1fr 2fr 1fr; 
             gap: 15px;
             overflow: hidden; 
         }
@@ -241,7 +238,6 @@
             z-index: 1;
         }
 
-        /* Poin 3: Memberikan prioritas z-index tertinggi ketika menu popup dibuka */
         .kartu-guru.menu-active {
             z-index: 99 !important;
         }
@@ -290,8 +286,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        /* Poin 2: Efek Grafik Loading Bar Bawah Kartu Telah Dihapus Total */
 
         .titik-tiga {
             position: absolute;
@@ -872,7 +866,6 @@
                     kartu.onclick = () => bukaModalAksi(noHp, namaAman, kategoriTugas);
                 }
 
-                /* Poin 2: Output HTML Kartu Bersih Dari Tag Loading Bar */
                 kartu.innerHTML = `
                     <div class="foto-wadah">
                         <img src="${fotoUrl}" alt="${namaAman}">
@@ -902,7 +895,6 @@
             });
         }
 
-        /* Poin 3: Mengatasi ketutupan dengan class 'menu-active' untuk menaikkan z-index */
         function bukaMenu(event, noHp) {
             event.stopPropagation(); 
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
