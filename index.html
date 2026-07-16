@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v37</title>
+    <title>Presensi Madrasah v38</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -67,15 +67,8 @@
             background: #e5e5ea; padding: 3px 8px; border-radius: 8px; width: max-content;
         }
 
-        #hijriRow {
-            background-color: var(--theme-green);
-            color: white;
-        }
-
-        .btn-hijri {
-            background: none; border: none; color: white; 
-            font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 12px;
-        }
+        #hijriRow { background-color: var(--theme-green); color: white; }
+        .btn-hijri { background: none; border: none; color: white; font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 12px; }
 
         .jam-card {
             background: var(--ios-card); padding: 0 15px; border-radius: 12px;
@@ -84,75 +77,38 @@
             height: 46px; box-sizing: border-box; min-width: 90px;
         }
 
-        .jam-display {
-            font-size: 17px; 
-            font-weight: 700; color: var(--theme-green);
-            letter-spacing: 0.5px; font-variant-numeric: tabular-nums;
-        }
+        .jam-display { font-size: 17px; font-weight: 700; color: var(--theme-green); letter-spacing: 0.5px; font-variant-numeric: tabular-nums; }
 
         .header-right { display: flex; align-items: center; gap: 12px; }
 
         .kontrol-panel, .periode-box {
-            display: flex; flex-direction: row; align-items: center;
-            gap: 12px; background: var(--ios-card); padding: 8px 16px;
-            border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            box-sizing: border-box; height: 52px; 
+            display: flex; flex-direction: row; align-items: center; gap: 12px; background: var(--ios-card); padding: 8px 16px;
+            border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); box-sizing: border-box; height: 52px; 
         }
 
         .kontrol-panel { cursor: pointer; transition: background 0.2s; }
         .kontrol-panel:active { background-color: #e5e5ea; }
 
-        .input-group-vertical {
-            display: flex; flex-direction: column; gap: 3px;
-            font-size: 10px; color: var(--ios-subtext); text-align: left;
-        }
+        .input-group-vertical { display: flex; flex-direction: column; gap: 3px; font-size: 10px; color: var(--ios-subtext); text-align: left; }
+        .kalender-tombol-palsu { padding: 4px 6px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid #c7c7cc; background: #f8f8f8; cursor: pointer; color: var(--ios-text); text-align: center; }
 
-        .kalender-tombol-palsu {
-            padding: 4px 6px; font-size: 11px; font-weight: 600;
-            border-radius: 6px; border: 1px solid #c7c7cc;
-            background: #f8f8f8; cursor: pointer; color: var(--ios-text); text-align: center;
-        }
+        button.btn-laporan { padding: 0 8px; font-size: 11px; background: var(--theme-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; height: 23px; transition: background 0.2s; }
 
-        button.btn-laporan {
-            padding: 0 8px; font-size: 11px; background: var(--theme-green);
-            color: white; border: none; border-radius: 6px; font-weight: 600;
-            cursor: pointer; height: 23px; transition: background 0.2s;
-        }
-
-        #loading {
-            font-size: 12px; color: var(--theme-green); text-align: center;
-            margin-bottom: 10px; flex-shrink: 0;
-        }
+        #loading { font-size: 12px; color: var(--theme-green); text-align: center; margin-bottom: 10px; flex-shrink: 0; }
 
         /* 2. LAYOUT MAIN BOARD */
-        .main-board {
-            flex-grow: 1; display: grid; grid-template-columns: 1fr 2fr 1fr; 
-            gap: 15px; overflow: hidden; 
-        }
+        .main-board { flex-grow: 1; display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; overflow: hidden; }
+        .kolom-susun { display: flex; flex-direction: column; gap: 15px; overflow: hidden; height: 100%; }
 
-        .kolom-susun {
-            display: flex; flex-direction: column; gap: 15px; overflow: hidden; height: 100%;
-        }
-
-        .kategori-seksi { 
-            display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.4);
-            border-radius: 16px; padding: 12px; height: 100%; box-sizing: border-box; overflow: hidden;
-        }
+        .kategori-seksi { display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.4); border-radius: 16px; padding: 12px; height: 100%; box-sizing: border-box; overflow: hidden; }
         
         .judul-seksi {
-            font-size: 12px; font-weight: 700; color: white;
-            background-color: var(--theme-green);
+            font-size: 12px; font-weight: 700; color: white; background-color: var(--theme-green);
             margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-            flex-shrink: 0; padding: 8px 12px; border-radius: 8px;
-            text-align: center; display: block;
+            flex-shrink: 0; padding: 8px 12px; border-radius: 8px; text-align: center; display: block;
         }
 
-        .bg-orange-header { background-color: var(--ios-orange) !important; }
-
-        .grid-guru {
-            flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: auto; 
-            padding-right: 5px; 
-        }
+        .grid-guru { flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: auto; padding-right: 5px; }
 
         #areaPimpinan, #areaTukar { grid-template-columns: 1fr; }
         #areaWajib { grid-template-columns: repeat(2, 1fr); }
@@ -160,8 +116,7 @@
 
         /* 3. CARDS & VISUAL EFFECTS */
         .kartu-guru {
-            background: var(--ios-card); border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06); width: 100%; height: 70px;
+            background: var(--ios-card); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); width: 100%; height: 70px;
             display: flex; flex-direction: row; align-items: center; padding: 6px 10px;
             border: 2px solid transparent; position: relative; box-sizing: border-box;
             transition: all 0.2s ease; cursor: pointer; z-index: 1;
@@ -266,14 +221,14 @@
     <div id="loading" style="display:none;">Sinkronisasi Data...</div>
     
     <div class="main-board">
-        <!-- Kolom Kiri Dibelah Jadi Dua Secara Vertikal -->
         <div class="kolom-susun">
             <div class="kategori-seksi" style="flex: 1;">
                 <div class="judul-seksi">Pimpinan Madrasah</div>
                 <div class="grid-guru" id="areaPimpinan"></div>
             </div>
             <div class="kategori-seksi" style="flex: 1;">
-                <div class="judul-seksi bg-orange-header">Guru Tukar Jam</div>
+                <!-- Penghapusan kelas bg-orange-header -->
+                <div class="judul-seksi">Guru Tukar Jam</div>
                 <div class="grid-guru" id="areaTukar"></div>
             </div>
         </div>
@@ -289,7 +244,6 @@
         </div>
     </div>
 
-    <!-- Modal Aksi (Hadir/Bantu/Sakit dsb) -->
     <div id="modalAksi" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalName" style="margin-top:0; font-size:16px;">Nama Guru</h3>
@@ -299,7 +253,6 @@
         </div>
     </div>
 
-    <!-- Modal Khusus Pemilihan Pengganti Tukar Jam -->
     <div id="modalPilihTukar" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalTukarName" style="margin-top:0; font-size:16px; color:var(--ios-purple);">Tukar Jam</h3>
@@ -309,7 +262,6 @@
         </div>
     </div>
 
-    <!-- Modal Sesi & Kalender -->
     <div id="modalSesi" class="modal-overlay">
         <div class="modal-content" style="width: 280px;">
             <h3 style="margin-top:0; font-size:15px; color:var(--ios-text);">Pilih Sesi Pembelajaran</h3>
@@ -342,7 +294,7 @@
         let dataSemuaGuru = [];
         let dataSemuaJadwal = [];
         let dataSemuaLog = [];
-        let dataTanggunganTukar = []; // Data simulasi daftar utang jam
+        let dataTanggunganTukar = []; 
         let penyesuaianHijri = 0;
 
         let activeHp = "";
@@ -386,7 +338,6 @@
                 dataSemuaGuru = data.guru.slice(1);
                 dataSemuaJadwal = data.jadwal.slice(1);
                 dataSemuaLog = data.log || [];
-                // Simulasi Data Tanggungan Tukar Jam (nantinya diambil dari data.tukar)
                 dataTanggunganTukar = data.tanggunganTukar || []; 
                 
                 document.getElementById("loading").style.display = "none";
@@ -494,18 +445,16 @@
             }
         }
 
-        // --- FUNGSI MODAL TUKAR JAM KHUSUS KELAS TERKAIT ---
         function bukaModalTukar(noHpAsal, namaAsal, infoKelas, event) {
             if (event) event.stopPropagation();
             document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+            document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active'));
             
             if (!infoKelas || infoKelas.trim() === "") {
                 alert("Tidak dapat ditukar: Kelas tidak terdeteksi pada jadwal."); return;
             }
 
-            // Ekstrak nama kelas (Contoh: "KELAS 1-A - Bahasa Indonesia" -> "KELAS 1-A")
-            const keywordKelas = infoKelas.split('-')[0].trim() + "-" + infoKelas.split('-')[1].split(' ')[0].trim();
-            const formatPencarian = infoKelas.split('-')[0].trim(); // Ambil "KELAS 1" atau "SIFIR A"
+            const formatPencarian = infoKelas.split('-')[0].trim(); 
             
             document.getElementById("modalTukarName").innerText = `Tukar Jam: ${namaAsal}`;
             const btnContainer = document.getElementById("modalTukarKandidat");
@@ -541,10 +490,8 @@
         async function eksekusiPertukaran(hpAsal, namaAsal, hpPengganti, namaPengganti) {
             tutupModalTukar();
             
-            // Masukkan Ke Tanggungan Lokal
             if (!dataTanggunganTukar.includes(hpAsal)) dataTanggunganTukar.push(hpAsal);
             
-            // Simpan log sementara di antarmuka
             const tgl = document.getElementById("tglAbsen").value;
             const sesi = document.getElementById("pilihSesi").value;
             
@@ -556,7 +503,6 @@
 
             tampilkanJadwal();
 
-            // Background proses ke Apps Script (simulasi struktur)
             const d = new Date(tgl);
             const namaHari = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][d.getDay()];
             
@@ -572,17 +518,13 @@
             } catch (e) { console.log(e); }
         }
 
-        // Pelunasan Tukar Jam
         async function bayarTukar(hpPelunas, namaPelunas) {
             if (!confirm(`Tandai Lunas untuk hutang jam ${namaPelunas}?`)) return;
             
             dataTanggunganTukar = dataTanggunganTukar.filter(hp => hp !== hpPelunas);
             tampilkanJadwal();
             
-            // Request Pelunasan ke API
-            try {
-                fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "bayarTukar", noHp: hpPelunas }) });
-            } catch (e) { console.log(e); }
+            try { fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "bayarTukar", noHp: hpPelunas }) }); } catch (e) { console.log(e); }
         }
 
         function bukaModalAksi(noHp, nama, kategoriTugas) {
@@ -634,7 +576,6 @@
 
             let kPimpinan = [], kWajib = [], kBebas = [];
 
-            // Memproses Card Utang Tukar Terlebih Dahulu
             dataTanggunganTukar.forEach(hpUtang => {
                 const gr = dataSemuaGuru.find(g => cleanNumber(g[0]) === hpUtang);
                 if (gr) {
@@ -651,7 +592,6 @@
                 }
             });
 
-            // Pemrosesan Layout Standard
             dataSemuaGuru.forEach(guru => {
                 const noHp = guru[0] ? guru[0].toString().trim() : "";
                 const nama = guru[1] ? guru[1].toString().trim() : "Tanpa Nama";
@@ -719,16 +659,30 @@
             kBebas.forEach(k => document.getElementById("areaBebas").appendChild(k));
         }
 
-        function bukaMenu(e, hp) {
-            e.stopPropagation(); document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-            const mn = document.getElementById(`menu-${hp}`); if (window.getComputedStyle(mn).display === 'none') mn.style.display = 'flex';
+        // PERBAIKAN: Fungsi Buka Menu dengan penambahan class 'menu-active' agar popup tidak tertimbun
+        function bukaMenu(event, noHp) {
+            event.stopPropagation(); 
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
+            document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active'));
+            
+            const menu = document.getElementById(`menu-${noHp}`);
+            const isHidden = (window.getComputedStyle(menu).display === 'none');
+            
+            if (isHidden) {
+                menu.style.display = 'flex';
+                document.getElementById(`card-${noHp}`).classList.add('menu-active');
+            } else {
+                menu.style.display = 'none';
+            }
         }
 
-        document.addEventListener('click', () => { document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none'); });
+        document.addEventListener('click', () => { document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none'); document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active')); });
 
         async function kirimKeDatabaseSpreadsheet(hp, nm, st, e) {
             if (e) e.stopPropagation();
             const elm = document.getElementById(`card-${hp}`); if (document.getElementById(`menu-${hp}`)) document.getElementById(`menu-${hp}`).style.display = 'none';
+            elm.classList.remove('menu-active'); // Hapus class penimpa z-index setelah opsi dipilih
+
             const tgl = document.getElementById("tglAbsen").value; const ss = document.getElementById("pilihSesi").value;
             const hr = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][new Date(tgl).getDay()];
 
@@ -753,7 +707,7 @@
             } catch (err) { elm.style.opacity = "1"; alert("Koneksi bermasalah."); }
         }
 
-        async function generateLaporan() { /* ... kode laporan tidak diubah ... */ }
+        async function generateLaporan() { /* fungsi laporan */ }
     </script>
 </body>
 </html>
