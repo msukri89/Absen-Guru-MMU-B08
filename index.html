@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v35</title>
+    <title>Presensi Madrasah v36</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -144,7 +144,7 @@
 
         .grid-guru {
             flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: auto; 
-            padding-right: 5px; /* Memberi ruang untuk scrollbar jika jadwal sangat padat */
+            padding-right: 5px; 
         }
 
         #areaPimpinan { grid-template-columns: 1fr; }
@@ -203,6 +203,7 @@
         .bg-orange { background-color: var(--ios-orange); }
         .bg-red { background-color: var(--ios-red); }
         .bg-blue { background-color: var(--ios-blue); }
+        .bg-green { background-color: var(--ios-green); } /* TAMBAHAN: Warna latar hijau untuk badge hadir */
         .d-none { display: none !important; }
 
         .titik-tiga {
@@ -381,18 +382,23 @@
         let kalenderTahunNav = 0;
         let activeCalendarTarget = 'tglAbsen';
 
+        // PENAMBAHAN: Mengizinkan status Hadir/Standby mendapatkan warna background hijau
         function getBadgeClass(status) {
             if (status === 'Sakit' || status === 'Izin') return 'bg-orange';
             if (status === 'Alpa') return 'bg-red';
             if (status === 'Bantu') return 'bg-blue';
+            if (status === 'Hadir' || status === 'Standby') return 'bg-green';
             return 'd-none';
         }
 
+        // PENAMBAHAN: Mengembalikan teks HADIR atau STANDBY
         function getBadgeText(status) {
             if (status === 'Sakit') return 'SAKIT';
             if (status === 'Izin') return 'IZIN';
             if (status === 'Alpa') return 'ALPA';
             if (status === 'Bantu') return 'INVAL';
+            if (status === 'Hadir') return 'HADIR';
+            if (status === 'Standby') return 'STANDBY';
             return '';
         }
 
