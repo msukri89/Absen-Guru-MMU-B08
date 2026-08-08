@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Presensi Madrasah v38</title>
+    <title>Presensi Madrasah v39</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="logo-app.png" type="image/png">
@@ -12,152 +12,67 @@
     <meta name="theme-color" content="#0c5c2d">
     <style>
         :root {
-            --ios-blue: #007aff;
-            --ios-green: #34c759;
-            --ios-orange: #ff9500;
-            --ios-red: #ff3b30;
-            --ios-purple: #af52de;
-            --ios-bg: #f2f2f7;
-            --ios-card: #ffffff;
-            --ios-text: #1c1c1e;
-            --ios-subtext: #8e8e93;
+            --ios-blue: #007aff; --ios-green: #34c759; --ios-orange: #ff9500;
+            --ios-red: #ff3b30; --ios-purple: #af52de; --ios-bg: #f2f2f7;
+            --ios-card: #ffffff; --ios-text: #1c1c1e; --ios-subtext: #8e8e93;
             --theme-green: #0c5c2d; 
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--ios-bg);
-            margin: 0;
-            padding: 0 15px 15px 15px; 
-            color: var(--ios-text);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--ios-bg); margin: 0; padding: 0 15px 15px 15px; color: var(--ios-text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
 
-        /* 1. NAVBAR HORIZONTAL */
-        .sticky-wrapper {
-            flex-shrink: 0;
-            background-color: var(--ios-bg);
-            padding: 18px 0;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
+        .sticky-wrapper { flex-shrink: 0; background-color: var(--ios-bg); padding: 18px 0; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .header-left { display: flex; align-items: center; gap: 12px; }
-
-        .logo-tengah {
-            height: 44px; width: auto;
-            object-fit: contain; border-radius: 12px;
-        }
-        
+        .logo-tengah { height: 44px; width: auto; object-fit: contain; border-radius: 12px; }
         .waktu-box { display: flex; flex-direction: column; gap: 4px; }
-
-        .datepicker-wrapper {
-            cursor: pointer; font-weight: 700; font-size: 13px;
-            color: var(--ios-text); padding-left: 2px;
-        }
-
-        .tanggal-display {
-            font-size: 11px; color: var(--ios-subtext);
-            display: flex; align-items: center; gap: 6px;
-            background: #e5e5ea; padding: 3px 8px; border-radius: 8px; width: max-content;
-        }
-
+        .datepicker-wrapper { cursor: pointer; font-weight: 700; font-size: 13px; color: var(--ios-text); padding-left: 2px; }
+        .tanggal-display { font-size: 11px; color: var(--ios-subtext); display: flex; align-items: center; gap: 6px; background: #e5e5ea; padding: 3px 8px; border-radius: 8px; width: max-content; }
         #hijriRow { background-color: var(--theme-green); color: white; }
         .btn-hijri { background: none; border: none; color: white; font-weight: bold; cursor: pointer; padding: 0 3px; font-size: 12px; }
-
-        .jam-card {
-            background: var(--ios-card); padding: 0 15px; border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex;
-            flex-direction: column; justify-content: center; align-items: center;
-            height: 46px; box-sizing: border-box; min-width: 90px;
-        }
-
+        .jam-card { background: var(--ios-card); padding: 0 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center; height: 46px; box-sizing: border-box; min-width: 90px; }
         .jam-display { font-size: 17px; font-weight: 700; color: var(--theme-green); letter-spacing: 0.5px; font-variant-numeric: tabular-nums; }
-
         .header-right { display: flex; align-items: center; gap: 12px; }
 
-        .kontrol-panel, .periode-box {
-            display: flex; flex-direction: row; align-items: center; gap: 12px; background: var(--ios-card); padding: 8px 16px;
-            border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); box-sizing: border-box; height: 52px; 
-        }
+        /* TOGGLE SWITCH STYLE */
+        .mode-toggle { display: flex; background: #e5e5ea; border-radius: 10px; padding: 3px; height: 46px; box-sizing: border-box; align-items: center;}
+        .toggle-btn { background: transparent; border: none; padding: 0 16px; height: 100%; font-size: 12px; font-weight: 700; color: var(--ios-subtext); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .toggle-btn.active { background: white; color: var(--ios-text); box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
 
+        .kontrol-panel, .periode-box { display: flex; flex-direction: row; align-items: center; gap: 12px; background: var(--ios-card); padding: 8px 16px; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); box-sizing: border-box; height: 46px; }
         .kontrol-panel { cursor: pointer; transition: background 0.2s; }
         .kontrol-panel:active { background-color: #e5e5ea; }
-
-        .input-group-vertical { display: flex; flex-direction: column; gap: 3px; font-size: 10px; color: var(--ios-subtext); text-align: left; }
+        .input-group-vertical { display: flex; flex-direction: column; gap: 3px; font-size: 10px; color: var(--ios-subtext); text-align: left; justify-content: center;}
         .kalender-tombol-palsu { padding: 4px 6px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid #c7c7cc; background: #f8f8f8; cursor: pointer; color: var(--ios-text); text-align: center; }
-
         button.btn-laporan { padding: 0 8px; font-size: 11px; background: var(--theme-green); color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; height: 23px; transition: background 0.2s; }
 
         #loading { font-size: 12px; color: var(--theme-green); text-align: center; margin-bottom: 10px; flex-shrink: 0; }
-
-        /* 2. LAYOUT MAIN BOARD */
+        
         .main-board { flex-grow: 1; display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; overflow: hidden; }
         .kolom-susun { display: flex; flex-direction: column; gap: 15px; overflow: hidden; height: 100%; }
-
         .kategori-seksi { display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.4); border-radius: 16px; padding: 12px; height: 100%; box-sizing: border-box; overflow: hidden; }
-        
-        .judul-seksi {
-            font-size: 12px; font-weight: 700; color: white; background-color: var(--theme-green);
-            margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
-            flex-shrink: 0; padding: 8px 12px; border-radius: 8px; text-align: center; display: block;
-        }
-
+        .judul-seksi { font-size: 12px; font-weight: 700; color: white; background-color: var(--theme-green); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; padding: 8px 12px; border-radius: 8px; text-align: center; display: block; }
         .grid-guru { flex-grow: 1; display: grid; align-content: start; gap: 10px; overflow-y: auto; padding-right: 5px; }
 
         #areaPimpinan, #areaTukar { grid-template-columns: 1fr; }
         #areaWajib { grid-template-columns: repeat(2, 1fr); }
         #areaBebas { grid-template-columns: 1fr; }
 
-        /* 3. CARDS & VISUAL EFFECTS */
-        .kartu-guru {
-            background: var(--ios-card); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); width: 100%; height: 70px;
-            display: flex; flex-direction: row; align-items: center; padding: 6px 10px;
-            border: 2px solid transparent; position: relative; box-sizing: border-box;
-            transition: all 0.2s ease; cursor: pointer; z-index: 1;
-        }
-
+        .kartu-guru { background: var(--ios-card); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); width: 100%; height: 70px; display: flex; flex-direction: row; align-items: center; padding: 6px 10px; border: 2px solid transparent; position: relative; box-sizing: border-box; transition: all 0.2s ease; cursor: pointer; z-index: 1; }
         .kartu-guru:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
         .kartu-guru.menu-active { z-index: 99 !important; }
         .kartu-piket { background: linear-gradient(135deg, #ffffff 0%, #fffdf5 100%); border: 1px dashed rgba(255, 193, 7, 0.5); }
-        
         .foto-wadah { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; flex-shrink: 0; margin-right: 10px; background: #e5e5ea; }
         .foto-wadah img { width: 100%; height: 100%; object-fit: cover; }
         .info-bawah { display: flex; flex-direction: column; justify-content: center; text-align: left; flex-grow: 1; padding: 0; width: calc(100% - 45px); }
-        
         .kartu-guru h3 { font-size: 11px; margin: 0 0 1px 0; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
         .info-jadwal { font-size: 9px; color: var(--ios-subtext); margin: 0; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .badge-status { font-size: 8px; padding: 2px 4px; border-radius: 4px; font-weight: 800; letter-spacing: 0.3px; color: white; display: inline-block; }
-        .bg-orange { background-color: var(--ios-orange); }
-        .bg-red { background-color: var(--ios-red); }
-        .bg-blue { background-color: var(--ios-blue); }
-        .bg-green { background-color: var(--ios-green); } 
-        .bg-purple { background-color: var(--ios-purple); } 
-        .d-none { display: none !important; }
-
-        .titik-tiga {
-            position: absolute; top: 50%; right: 8px; transform: translateY(-50%); color: var(--ios-subtext); width: 20px; height: 20px;
-            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; cursor: pointer; z-index: 2;
-        }
-
-        .dropdown-menu {
-            display: none; position: absolute; top: 34px; right: 4px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            flex-direction: column; overflow: hidden; z-index: 100; min-width: 100px;
-        }
+        .bg-orange { background-color: var(--ios-orange); } .bg-red { background-color: var(--ios-red); } .bg-blue { background-color: var(--ios-blue); } .bg-green { background-color: var(--ios-green); } .bg-purple { background-color: var(--ios-purple); } .d-none { display: none !important; }
+        .titik-tiga { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); color: var(--ios-subtext); width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; cursor: pointer; z-index: 2; }
+        .dropdown-menu { display: none; position: absolute; top: 34px; right: 4px; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); flex-direction: column; overflow: hidden; z-index: 100; min-width: 100px; }
         .dropdown-menu div { padding: 8px 16px; font-size: 12px; font-weight: 600; border-bottom: 1px solid #f2f2f7; text-align: left; }
-        .dropdown-menu div:last-child { border-bottom: none; }
         .dropdown-menu div:hover { background-color: #f2f2f7; }
-        
-        .opt-sakit { color: var(--ios-orange); }
-        .opt-izin { color: var(--ios-orange); }
-        .opt-alpa { color: var(--ios-red); }
-        .opt-tukar { color: var(--ios-purple); font-weight: 700 !important; }
+        .opt-sakit { color: var(--ios-orange); } .opt-izin { color: var(--ios-orange); } .opt-alpa { color: var(--ios-red); } .opt-tukar { color: var(--ios-purple); font-weight: 700 !important; }
 
         .status-hadir { border-color: var(--ios-green); box-shadow: 0 2px 8px rgba(52, 199, 89, 0.2); }
         .status-bantu { border-color: var(--ios-blue); box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2); }
@@ -165,7 +80,6 @@
         .status-izin, .status-sakit { border-color: var(--ios-orange); opacity: 0.85; }
         .status-alpa { border-color: var(--ios-red); opacity: 0.7; filter: grayscale(50%); }
 
-        /* MODAL OVERLAY */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; display: none; justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 20px; border-radius: 16px; width: 260px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 80vh; overflow-y: auto;}
         .modal-buttons { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
@@ -180,7 +94,6 @@
     </style>
 </head>
 <body>
-
     <div class="sticky-wrapper">
         <div class="header-left">
             <img src="logo-app.png" alt="Logo Madrasah" class="logo-tengah">
@@ -201,15 +114,22 @@
         </div>
         
         <div class="header-right">
-            <div class="kontrol-panel" onclick="bukaModalSesi()">
+            <!-- TOGGLE SWITCH MADRASAH / MUSYAWARAH -->
+            <div class="mode-toggle">
+                <button id="btnModeMadrasah" class="toggle-btn active" onclick="setModeAplikasi('Madrasah')">Madrasah</button>
+                <button id="btnModeMusyawarah" class="toggle-btn" onclick="setModeAplikasi('Musyawarah')">Musyawarah</button>
+            </div>
+
+            <div class="kontrol-panel" id="panelSesiMenu" onclick="bukaModalSesi()">
                 <div class="input-group-vertical">
-                    <label>Sesi Aktif:</label>
+                    <label id="lblSesiAtas">Sesi Aktif:</label>
                     <div class="kalender-tombol-palsu" style="min-width: 140px; display: flex; justify-content: space-between; align-items: center;">
-                        <span id="teksSesiTerpilih">...</span><span style="color: var(--ios-subtext); font-size: 9px; margin-left: 5px;">▼</span>
+                        <span id="teksSesiTerpilih">...</span><span id="ikonDropdownSesi" style="color: var(--ios-subtext); font-size: 9px; margin-left: 5px;">▼</span>
                     </div>
                 </div>
                 <input type="hidden" id="pilihSesi" value="1">
             </div>
+
             <div class="periode-box">
                 <div class="input-group-vertical"><label>Periode Dari:</label><div class="kalender-tombol-palsu" onclick="bukaModalKalender('tglMulai')"><span id="teksTglMulai">--/--/----</span><input type="date" id="tglMulai" style="display:none;"></div></div>
                 <div class="input-group-vertical"><label>Periode Sampai:</label><div class="kalender-tombol-palsu" onclick="bukaModalKalender('tglAkhir')"><span id="teksTglAkhir">--/--/----</span><input type="date" id="tglAkhir" style="display:none;"></div></div>
@@ -222,28 +142,28 @@
     
     <div class="main-board">
         <div class="kolom-susun">
-            <div class="kategori-seksi" style="flex: 1;">
-                <div class="judul-seksi">Pimpinan Madrasah</div>
+            <div class="kategori-seksi" style="flex: 1;" id="boxPimpinan">
+                <div class="judul-seksi" id="lblKiriAtas">Pimpinan Madrasah</div>
                 <div class="grid-guru" id="areaPimpinan"></div>
             </div>
             <div class="kategori-seksi" style="flex: 1;">
-                <!-- Penghapusan kelas bg-orange-header -->
                 <div class="judul-seksi">Guru Tukar Jam</div>
                 <div class="grid-guru" id="areaTukar"></div>
             </div>
         </div>
 
         <div class="kategori-seksi">
-            <div class="judul-seksi">Kewajiban Mengajar Sesi Ini</div>
+            <div class="judul-seksi" id="lblTengah">Kewajiban Mengajar Sesi Ini</div>
             <div class="grid-guru" id="areaWajib"></div>
         </div>
 
         <div class="kategori-seksi">
-            <div class="judul-seksi">Bebas</div>
+            <div class="judul-seksi" id="lblKanan">Bebas & Piket</div>
             <div class="grid-guru" id="areaBebas"></div>
         </div>
     </div>
 
+    <!-- Modals -->
     <div id="modalAksi" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modalName" style="margin-top:0; font-size:16px;">Nama Guru</h3>
@@ -253,14 +173,7 @@
         </div>
     </div>
 
-    <div id="modalPilihTukar" class="modal-overlay">
-        <div class="modal-content">
-            <h3 id="modalTukarName" style="margin-top:0; font-size:16px; color:var(--ios-purple);">Tukar Jam</h3>
-            <p id="modalTukarDesc" style="font-size:12px; color:var(--ios-subtext); margin-bottom: 15px;">Pilih guru pengganti yang aktif di kelas ini:</p>
-            <div class="modal-buttons" id="modalTukarKandidat"></div>
-            <button class="btn-tutup" onclick="tutupModalTukar()">Batal</button>
-        </div>
-    </div>
+    <div id="modalPilihTukar" class="modal-overlay"><div class="modal-content"><h3 id="modalTukarName" style="margin-top:0; font-size:16px; color:var(--ios-purple);">Tukar Jam</h3><p id="modalTukarDesc" style="font-size:12px; color:var(--ios-subtext); margin-bottom: 15px;">Pilih guru pengganti yang aktif di kelas ini:</p><div class="modal-buttons" id="modalTukarKandidat"></div><button class="btn-tutup" onclick="tutupModalTukar()">Batal</button></div></div>
 
     <div id="modalSesi" class="modal-overlay">
         <div class="modal-content" style="width: 280px;">
@@ -295,38 +208,31 @@
         let dataSemuaJadwal = [];
         let dataSemuaLog = [];
         let dataTanggunganTukar = []; 
+        let dataJadwalMusyawarah = []; // Wadah untuk data Musyawarah
         let penyesuaianHijri = 0;
+        let modeAplikasi = "Madrasah"; // State Mode Aktif
 
-        let activeHp = "";
-        let activeNama = "";
-        
-        let kalenderBulanNav = 0;
-        let kalenderTahunNav = 0;
-        let activeCalendarTarget = 'tglAbsen';
+        let activeHp = "", activeNama = "", kalenderBulanNav = 0, kalenderTahunNav = 0, activeCalendarTarget = 'tglAbsen';
 
         function getBadgeClass(status) {
             if (status === 'Sakit' || status === 'Izin') return 'bg-orange';
             if (status === 'Alpa') return 'bg-red';
-            if (status === 'Bantu') return 'bg-blue';
+            if (status === 'Bantu' || status === 'Jaga') return 'bg-blue';
             if (status === 'Hadir' || status === 'Standby') return 'bg-green';
             if (status === 'Tukar') return 'bg-purple'; 
             return 'd-none';
         }
 
         function getBadgeText(status) {
-            if (status === 'Sakit') return 'SAKIT';
-            if (status === 'Izin') return 'IZIN';
-            if (status === 'Alpa') return 'ALPA';
-            if (status === 'Bantu') return 'INVAL';
-            if (status === 'Hadir') return 'HADIR';
-            if (status === 'Standby') return 'STANDBY';
-            if (status === 'Tukar') return 'TUKAR';
+            if (status === 'Sakit') return 'SAKIT'; if (status === 'Izin') return 'IZIN';
+            if (status === 'Alpa') return 'ALPA'; if (status === 'Bantu') return 'INVAL';
+            if (status === 'Hadir') return 'HADIR'; if (status === 'Standby') return 'STANDBY';
+            if (status === 'Tukar') return 'TUKAR'; if (status === 'Jaga') return 'JAGA';
             return '';
         }
 
         window.onload = async function() {
             if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA SW Registered.')); }
-
             document.getElementById("tglAbsen").valueAsDate = new Date();
             setTanggalOtomatisPeriode(); setSesiOtomatisJam(); renderTanggal(); updateClock();
             setInterval(updateClock, 1000);
@@ -339,12 +245,12 @@
                 dataSemuaJadwal = data.jadwal.slice(1);
                 dataSemuaLog = data.log || [];
                 dataTanggunganTukar = data.tanggunganTukar || []; 
+                dataJadwalMusyawarah = data.musyawarah || []; // Tangkap data Musyawarah
                 
                 document.getElementById("loading").style.display = "none";
                 tampilkanJadwal();
             } catch (error) {
-                alert("Gagal memuat database.");
-                document.getElementById("loading").style.display = "none";
+                alert("Gagal memuat database."); document.getElementById("loading").style.display = "none";
             }
         };
 
@@ -354,198 +260,143 @@
             const menit = String(now.getMinutes()).padStart(2, '0');
             const detik = String(now.getSeconds()).padStart(2, '0');
             document.getElementById("liveClock").innerText = `${jam}:${menit}:${detik}`;
+            
+            // Auto Switch Mode Musyawarah pada pukul 15.30 ke atas
+            const waktuMenit = (now.getHours() * 100) + now.getMinutes();
+            if (waktuMenit >= 1530 && modeAplikasi !== "Musyawarah" && !document.getElementById("tglAbsen").dataset.manualSwitch) {
+                setModeAplikasi("Musyawarah", true);
+            }
         }
 
         function setSesiOtomatisJam() {
-            const waktuMenit = (new Date().getHours() * 100) + new Date().getMinutes();
-            let s = "1"; 
-            if (waktuMenit > 835 && waktuMenit <= 1020) s = "2";
-            else if (waktuMenit > 1020 && waktuMenit <= 1200) s = "3";
-            document.getElementById("pilihSesi").value = s;
+            const w = (new Date().getHours() * 100) + new Date().getMinutes();
+            if (w < 1530) {
+                let s = "1"; 
+                if (w > 835 && w <= 1020) s = "2"; else if (w > 1020 && w <= 1200) s = "3";
+                document.getElementById("pilihSesi").value = s;
+            }
+        }
+
+        function setModeAplikasi(mode, isAuto = false) {
+            modeAplikasi = mode;
+            if(!isAuto) document.getElementById("tglAbsen").dataset.manualSwitch = "true";
+
+            document.getElementById("btnModeMadrasah").classList.remove("active");
+            document.getElementById("btnModeMusyawarah").classList.remove("active");
+            document.getElementById(`btnMode${mode}`).classList.add("active");
+
+            if(mode === "Musyawarah") {
+                document.getElementById("pilihSesi").value = "Musyawarah";
+                document.getElementById("teksSesiTerpilih").innerText = "15.30 - 16.30";
+                document.getElementById("lblSesiAtas").innerText = "Sesi Musyawarah:";
+                document.getElementById("ikonDropdownSesi").style.display = "none";
+                document.getElementById("panelSesiMenu").style.cursor = "default";
+                document.getElementById("panelSesiMenu").onclick = null;
+                
+                document.getElementById("boxPimpinan").style.display = "none"; // Hilangkan box pimpinan
+                document.getElementById("lblTengah").innerText = "Kewajiban Jaga Musyawarah";
+                document.getElementById("lblKanan").innerText = "Bebas Tugas";
+            } else {
+                setSesiOtomatisJam();
+                document.getElementById("lblSesiAtas").innerText = "Sesi Aktif:";
+                document.getElementById("ikonDropdownSesi").style.display = "inline";
+                document.getElementById("panelSesiMenu").style.cursor = "pointer";
+                document.getElementById("panelSesiMenu").onclick = bukaModalSesi;
+                
+                document.getElementById("boxPimpinan").style.display = "flex"; // Munculkan box pimpinan
+                document.getElementById("lblTengah").innerText = "Kewajiban Mengajar Sesi Ini";
+                document.getElementById("lblKanan").innerText = "Bebas & Piket";
+            }
+            tampilkanJadwal();
         }
 
         function setTanggalOtomatisPeriode() {
-            let h = new Date();
-            let tglM = new Date(h.getFullYear(), h.getMonth(), 20);
-            let tglA = new Date(h.getFullYear(), h.getMonth() + 1, 19);
+            let h = new Date(); let tglM = new Date(h.getFullYear(), h.getMonth(), 20); let tglA = new Date(h.getFullYear(), h.getMonth() + 1, 19);
             if (h.getDate() < 20) { tglM.setMonth(tglM.getMonth() - 1); tglA.setMonth(tglA.getMonth() - 1); }
-            document.getElementById("tglMulai").valueAsDate = tglM;
-            document.getElementById("tglAkhir").valueAsDate = tglA;
+            document.getElementById("tglMulai").valueAsDate = tglM; document.getElementById("tglAkhir").valueAsDate = tglA;
             document.getElementById("teksTglMulai").innerText = `${String(tglM.getDate()).padStart(2,'0')}/${String(tglM.getMonth()+1).padStart(2,'0')}/${tglM.getFullYear()}`;
             document.getElementById("teksTglAkhir").innerText = `${String(tglA.getDate()).padStart(2,'0')}/${String(tglA.getMonth()+1).padStart(2,'0')}/${tglA.getFullYear()}`;
         }
-
         function handlePerubahanTanggal() { renderTanggal(); tampilkanJadwal(); }
-
         function renderTanggal() {
-            const strTgl = document.getElementById("tglAbsen").value;
-            if (!strTgl) return;
-            const tgtTgl = new Date(strTgl);
-            document.getElementById("teksMasehi").innerText = `${tgtTgl.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} M.`;
-            
+            const strTgl = document.getElementById("tglAbsen").value; if (!strTgl) return;
+            const tgtTgl = new Date(strTgl); document.getElementById("teksMasehi").innerText = `${tgtTgl.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} M.`;
             let tglH = new Date(tgtTgl); tglH.setDate(tglH.getDate() + penyesuaianHijri);
             try {
                 const dH = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { day: 'numeric' }).format(tglH);
                 const bH = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { month: 'numeric' }).format(tglH);
                 const yH = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { year: 'numeric' }).format(tglH).replace(/[^\d]/g, '').trim();
                 const nmBln = ["Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"][parseInt(bH.replace(/[^\d]/g, '')) - 1] || "Muharram";
-                document.getElementById("teksHijri").innerText = `${dH} ${nmBln} ${yH} H.`;
-                document.getElementById("hijriRow").style.display = "flex";
+                document.getElementById("teksHijri").innerText = `${dH} ${nmBln} ${yH} H.`; document.getElementById("hijriRow").style.display = "flex";
             } catch (e) { document.getElementById("hijriRow").style.display = "none"; }
         }
-
         function ubahHijri(n, e) { if(e) e.stopPropagation(); penyesuaianHijri = n === 0 ? 0 : penyesuaianHijri + n; renderTanggal(); }
         function cleanNumber(no) { let c = no.toString().replace(/[^\d]/g, ''); if(c.startsWith('62')) c = c.substring(2); if(c.startsWith('0')) c = c.substring(1); return c; }
 
-        function bukaModalSesi() { document.getElementById("modalSesi").style.display = "flex"; }
+        function bukaModalSesi() { if (modeAplikasi === "Madrasah") document.getElementById("modalSesi").style.display = "flex"; }
         function tutupModalSesi() { document.getElementById("modalSesi").style.display = "none"; }
         function pilihSesiKustom(val) { document.getElementById("pilihSesi").value = val; tutupModalSesi(); tampilkanJadwal(); }
-
-        function bukaModalKalender(tgtId) {
-            activeCalendarTarget = tgtId;
-            let val = document.getElementById(tgtId).value;
-            let act = val ? new Date(val) : new Date();
-            kalenderBulanNav = act.getMonth(); kalenderTahunNav = act.getFullYear();
-            renderGridKalender(kalenderBulanNav, kalenderTahunNav);
-            document.getElementById("modalKalender").style.display = "flex";
-        }
+        function bukaModalKalender(tgtId) { activeCalendarTarget = tgtId; let act = document.getElementById(tgtId).value ? new Date(document.getElementById(tgtId).value) : new Date(); kalenderBulanNav = act.getMonth(); kalenderTahunNav = act.getFullYear(); renderGridKalender(kalenderBulanNav, kalenderTahunNav); document.getElementById("modalKalender").style.display = "flex"; }
         function tutupModalKalender() { document.getElementById("modalKalender").style.display = "none"; }
-        function pindahBulanKalender(dir) {
-            kalenderBulanNav += dir;
-            if (kalenderBulanNav < 0) { kalenderBulanNav = 11; kalenderTahunNav--; } else if (kalenderBulanNav > 11) { kalenderBulanNav = 0; kalenderTahunNav++; }
-            renderGridKalender(kalenderBulanNav, kalenderTahunNav);
-        }
-        function renderGridKalender(bln, thn) {
+        function pindahBulanKalender(dir) { kalenderBulanNav += dir; if (kalenderBulanNav < 0) { kalenderBulanNav = 11; kalenderTahunNav--; } else if (kalenderBulanNav > 11) { kalenderBulanNav = 0; kalenderTahunNav++; } renderGridKalender(kalenderBulanNav, kalenderTahunNav); }
+        function renderGridKalender(bln, thn) { /* Kode Kalender sama seperti sebelumnya */
             document.getElementById("judulBulanTahunKalender").innerText = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"][bln] + " " + thn;
             const grid = document.getElementById("gridHariKalender"); grid.innerHTML = "";
             const hPertama = new Date(thn, bln, 1).getDay(); const jHari = new Date(thn, bln + 1, 0).getDate();
             for (let i = 0; i < hPertama; i++) grid.appendChild(document.createElement("div"));
-            
-            const trgVal = document.getElementById(activeCalendarTarget).value;
-            const trgObj = trgVal ? new Date(trgVal) : new Date(); const tNow = new Date();
-            
+            const trgObj = document.getElementById(activeCalendarTarget).value ? new Date(document.getElementById(activeCalendarTarget).value) : new Date(); const tNow = new Date();
             for (let d = 1; d <= jHari; d++) {
-                const btn = document.createElement("div"); btn.innerText = d;
-                btn.style.cssText = "padding:8px 0; text-align:center; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;";
-                let isSel = (trgObj.getDate() === d && trgObj.getMonth() === bln && trgObj.getFullYear() === thn);
-                let isTdy = (tNow.getDate() === d && tNow.getMonth() === bln && tNow.getFullYear() === thn);
-                if (isSel) { btn.style.backgroundColor = "var(--theme-green)"; btn.style.color = "white"; }
-                else if (isTdy) { btn.style.backgroundColor = "#c8e6c9"; btn.style.color = "var(--theme-green)"; }
-                else { btn.style.color = "var(--ios-text)"; btn.style.backgroundColor = "transparent"; }
-                btn.onmouseover = () => { if(!isSel) btn.style.backgroundColor = "#e5e5ea"; };
-                btn.onmouseout = () => { if(!isSel) btn.style.backgroundColor = isTdy ? "#c8e6c9" : "transparent"; };
-                btn.onclick = () => {
-                    const strM = String(bln + 1).padStart(2, '0'); const strD = String(d).padStart(2, '0');
-                    document.getElementById(activeCalendarTarget).value = `${thn}-${strM}-${strD}`;
-                    if (activeCalendarTarget === 'tglAbsen') handlePerubahanTanggal();
-                    else document.getElementById(activeCalendarTarget === 'tglMulai' ? 'teksTglMulai' : 'teksTglAkhir').innerText = `${strD}/${strM}/${thn}`;
-                    tutupModalKalender();
-                };
+                const btn = document.createElement("div"); btn.innerText = d; btn.style.cssText = "padding:8px 0; text-align:center; border-radius:8px; cursor:pointer; font-size:13px; font-weight:600;";
+                let isSel = (trgObj.getDate() === d && trgObj.getMonth() === bln && trgObj.getFullYear() === thn); let isTdy = (tNow.getDate() === d && tNow.getMonth() === bln && tNow.getFullYear() === thn);
+                if (isSel) { btn.style.backgroundColor = "var(--theme-green)"; btn.style.color = "white"; } else if (isTdy) { btn.style.backgroundColor = "#c8e6c9"; btn.style.color = "var(--theme-green)"; } else { btn.style.color = "var(--ios-text)"; btn.style.backgroundColor = "transparent"; }
+                btn.onmouseover = () => { if(!isSel) btn.style.backgroundColor = "#e5e5ea"; }; btn.onmouseout = () => { if(!isSel) btn.style.backgroundColor = isTdy ? "#c8e6c9" : "transparent"; };
+                btn.onclick = () => { const strM = String(bln + 1).padStart(2, '0'); const strD = String(d).padStart(2, '0'); document.getElementById(activeCalendarTarget).value = `${thn}-${strM}-${strD}`; if (activeCalendarTarget === 'tglAbsen') handlePerubahanTanggal(); else document.getElementById(activeCalendarTarget === 'tglMulai' ? 'teksTglMulai' : 'teksTglAkhir').innerText = `${strD}/${strM}/${thn}`; tutupModalKalender(); };
                 grid.appendChild(btn);
             }
         }
 
-        function bukaModalTukar(noHpAsal, namaAsal, infoKelas, event) {
-            if (event) event.stopPropagation();
-            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-            document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active'));
-            
-            if (!infoKelas || infoKelas.trim() === "") {
-                alert("Tidak dapat ditukar: Kelas tidak terdeteksi pada jadwal."); return;
-            }
-
-            const formatPencarian = infoKelas.split('-')[0].trim(); 
-            
-            document.getElementById("modalTukarName").innerText = `Tukar Jam: ${namaAsal}`;
-            const btnContainer = document.getElementById("modalTukarKandidat");
-            btnContainer.innerHTML = "";
-
+        // TUKAR JAM MODE
+        function bukaModalTukar(noHpAsal, namaAsal, infoPencarian, event) {
+            if (event) event.stopPropagation(); document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none'); document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active'));
+            document.getElementById("modalTukarName").innerText = `Tukar Jam: ${namaAsal}`; const btnContainer = document.getElementById("modalTukarKandidat"); btnContainer.innerHTML = "";
             let kandidatHps = new Set();
-            dataSemuaJadwal.forEach(j => {
-                if (j[3] && j[3].toString().toUpperCase().startsWith(formatPencarian.toUpperCase())) {
-                    let cHp = cleanNumber(j[5]);
-                    if (cHp !== cleanNumber(noHpAsal) && cHp !== "") { kandidatHps.add(cHp); }
-                }
-            });
-
-            if (kandidatHps.size === 0) {
-                btnContainer.innerHTML = `<p style="font-size:12px; color:var(--ios-red);">Tidak ada kandidat guru lain yang aktif di kelas tersebut.</p>`;
+            
+            if(modeAplikasi === "Madrasah") {
+                const formatPencarian = infoPencarian.split('-')[0].trim();
+                dataSemuaJadwal.forEach(j => { if (j[3] && j[3].toString().toUpperCase().startsWith(formatPencarian.toUpperCase())) { let cHp = cleanNumber(j[5]); if (cHp !== cleanNumber(noHpAsal) && cHp !== "") { kandidatHps.add(cHp); } } });
             } else {
-                kandidatHps.forEach(hp => {
-                    const g = dataSemuaGuru.find(guru => cleanNumber(guru[0]) === hp);
-                    if (g) {
-                        const btn = document.createElement("button");
-                        btn.className = "btn-tukar";
-                        btn.innerText = `Pilih ${g[1]}`;
-                        btn.onclick = () => eksekusiPertukaran(noHpAsal, namaAsal, hp, g[1]);
-                        btnContainer.appendChild(btn);
-                    }
-                });
+                // Di mode Musyawarah, bisa tukar dengan semua Pimpinan/WaliKelas lainnya
+                dataSemuaGuru.forEach(g => { if(g[2] && (g[2].toString().toUpperCase() === "PIMPINAN" || g[2].toString().toUpperCase() === "WALI KELAS")) { let cHp = cleanNumber(g[0]); if(cHp !== cleanNumber(noHpAsal) && cHp !== "") kandidatHps.add(cHp); } });
             }
+
+            if (kandidatHps.size === 0) btnContainer.innerHTML = `<p style="font-size:12px; color:var(--ios-red);">Tidak ada kandidat guru tersedia.</p>`;
+            else { kandidatHps.forEach(hp => { const g = dataSemuaGuru.find(guru => cleanNumber(guru[0]) === hp); if (g) { const btn = document.createElement("button"); btn.className = "btn-tukar"; btn.innerText = `Pilih ${g[1]}`; btn.onclick = () => eksekusiPertukaran(noHpAsal, namaAsal, hp, g[1]); btnContainer.appendChild(btn); } }); }
             document.getElementById("modalPilihTukar").style.display = "flex";
         }
-
         function tutupModalTukar() { document.getElementById("modalPilihTukar").style.display = "none"; }
-
         async function eksekusiPertukaran(hpAsal, namaAsal, hpPengganti, namaPengganti) {
-            tutupModalTukar();
-            
-            if (!dataTanggunganTukar.includes(hpAsal)) dataTanggunganTukar.push(hpAsal);
-            
-            const tgl = document.getElementById("tglAbsen").value;
-            const sesi = document.getElementById("pilihSesi").value;
-            
+            tutupModalTukar(); if (!dataTanggunganTukar.includes(hpAsal)) dataTanggunganTukar.push(hpAsal);
+            const tgl = document.getElementById("tglAbsen").value; const sesi = document.getElementById("pilihSesi").value;
             let idxP = dataSemuaLog.findIndex(l => l.tanggal === tgl && l.sesi === sesi && cleanNumber(l.noHp) === cleanNumber(hpPengganti));
             if (idxP !== -1) dataSemuaLog[idxP].status = "Hadir"; else dataSemuaLog.push({tanggal: tgl, sesi: sesi, noHp: hpPengganti, status: "Hadir"});
-            
             let idxA = dataSemuaLog.findIndex(l => l.tanggal === tgl && l.sesi === sesi && cleanNumber(l.noHp) === cleanNumber(hpAsal));
             if (idxA !== -1) dataSemuaLog[idxA].status = "Tukar"; else dataSemuaLog.push({tanggal: tgl, sesi: sesi, noHp: hpAsal, status: "Tukar"});
-
             tampilkanJadwal();
-
-            const d = new Date(tgl);
-            const namaHari = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][d.getDay()];
-            
-            try {
-                fetch(API_URL, {
-                    method: "POST", body: JSON.stringify({
-                        action: "tukarJamMode",
-                        tanggal: tgl, hari: namaHari, sesi: sesi,
-                        hpAsal: hpAsal, namaAsal: namaAsal,
-                        hpPengganti: hpPengganti, namaPengganti: namaPengganti
-                    })
-                });
-            } catch (e) { console.log(e); }
+            try { fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "tukarJamMode", tanggal: tgl, hari: ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][new Date(tgl).getDay()], sesi: sesi, hpAsal: hpAsal, namaAsal: namaAsal, hpPengganti: hpPengganti, namaPengganti: namaPengganti }) }); } catch (e) {}
         }
-
         async function bayarTukar(hpPelunas, namaPelunas) {
             if (!confirm(`Tandai Lunas untuk hutang jam ${namaPelunas}?`)) return;
-            
-            dataTanggunganTukar = dataTanggunganTukar.filter(hp => hp !== hpPelunas);
-            tampilkanJadwal();
-            
-            try { fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "bayarTukar", noHp: hpPelunas }) }); } catch (e) { console.log(e); }
+            dataTanggunganTukar = dataTanggunganTukar.filter(hp => hp !== hpPelunas); tampilkanJadwal();
+            try { fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "bayarTukar", noHp: hpPelunas }) }); } catch (e) {}
         }
 
         function bukaModalAksi(noHp, nama, kategoriTugas) {
             activeHp = noHp; activeNama = nama; document.getElementById("modalName").innerText = nama;
             const btnContainer = document.getElementById("modalButtonsContainer");
             const strTgl = document.getElementById("tglAbsen").value; const sesiNo = document.getElementById("pilihSesi").value;
-            const hrNama = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][new Date(strTgl).getDay()];
-
-            const listHpWajib = dataSemuaJadwal.filter(b => b[1] === hrNama && b[2].toString() === sesiNo)
-                .filter(j => j[3] && !j[3].toString().toUpperCase().includes("PIKET") && j[5] && j[5].toString().trim() !== "")
-                .map(j => j[5].toString().trim());
-
-            let jmlKosong = 0;
-            listHpWajib.forEach(hpW => {
-                const log = dataSemuaLog.find(l => l.tanggal === strTgl && l.sesi === sesiNo.toString() && cleanNumber(l.noHp) === cleanNumber(hpW));
-                if (log && (log.status === "Sakit" || log.status === "Izin" || log.status === "Alpa" || log.status === "Tukar")) jmlKosong++;
-            });
-            let jmlBantu = dataSemuaLog.filter(l => l.tanggal === strTgl && l.sesi === sesiNo.toString() && l.status === "Bantu" && cleanNumber(l.noHp) !== cleanNumber(noHp)).length;
-
-            let btnBantu = (jmlKosong > jmlBantu) ? `<button class="btn-bantu" onclick="pilihAksi('Bantu')">Bantu (Inval Kelas)</button>` : `<button class="btn-bantu" style="background-color:#c7c7cc; cursor:not-allowed;" disabled>Inval Dikunci</button>`;
-
+            
+            let btnBantu = `<button class="btn-bantu" onclick="pilihAksi(modeAplikasi==='Musyawarah'?'Jaga':'Bantu')">${modeAplikasi==='Musyawarah'?'Bantu Jaga':'Bantu (Inval Kelas)'}</button>`;
+            
             let ht = "";
             if (kategoriTugas === "PIKET") ht = `<button class="btn-standby" onclick="pilihAksi('Standby')">Standby Piket</button>${btnBantu}`;
             else if (kategoriTugas === "BEBAS") ht = `${btnBantu}`;
@@ -557,71 +408,61 @@
         function tutupModalAksi() { document.getElementById("modalAksi").style.display = "none"; }
         function pilihAksi(st) { kirimKeDatabaseSpreadsheet(activeHp, activeNama, st); tutupModalAksi(); }
 
+        // CORE RENDER
         function tampilkanJadwal() {
-            const strTgl = document.getElementById("tglAbsen").value;
-            if (!strTgl) return;
-
-            const tDate = new Date(strTgl);
-            const hariNama = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][tDate.getDay()];
+            const strTgl = document.getElementById("tglAbsen").value; if (!strTgl) return;
+            const tDate = new Date(strTgl); const hariNama = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][tDate.getDay()];
             const sesiNo = document.getElementById("pilihSesi").value;
-            document.getElementById("teksSesiTerpilih").innerText = {"1":"Sesi 1 (07.00 - 08.20)","2":"Sesi 2 (08.50 - 10.10)","3":"Sesi 3 (10.30 - 11.50)"}[sesiNo] || "Sesi " + sesiNo;
+            if(modeAplikasi === "Madrasah") document.getElementById("teksSesiTerpilih").innerText = {"1":"Sesi 1 (07.00 - 08.20)","2":"Sesi 2 (08.50 - 10.10)","3":"Sesi 3 (10.30 - 11.50)"}[sesiNo] || "Sesi " + sesiNo;
 
-            document.getElementById("areaPimpinan").innerHTML = "";
-            document.getElementById("areaWajib").innerHTML = "";
-            document.getElementById("areaTukar").innerHTML = "";
-            document.getElementById("areaBebas").innerHTML = "";
+            document.getElementById("areaPimpinan").innerHTML = ""; document.getElementById("areaWajib").innerHTML = "";
+            document.getElementById("areaTukar").innerHTML = ""; document.getElementById("areaBebas").innerHTML = "";
 
-            const jadwalNow = dataSemuaJadwal.filter(b => b[1] === hariNama && b[2].toString() === sesiNo);
-            let hpsWajibAtauPiket = jadwalNow.map(j => j[5]);
+            let hpsWajibAtauPiket = [];
+            const jadwalNow = modeAplikasi === "Madrasah" 
+                ? dataSemuaJadwal.filter(b => b[1] === hariNama && b[2].toString() === sesiNo) 
+                : dataJadwalMusyawarah.filter(b => b[0] === hariNama); // Index 0 is Hari in Musyawarah Sheet
+            
+            if(modeAplikasi === "Madrasah") hpsWajibAtauPiket = jadwalNow.map(j => j[5]);
+            else hpsWajibAtauPiket = jadwalNow.map(j => j[2]); // Index 2 is NoHP in Musyawarah Sheet
 
             let kPimpinan = [], kWajib = [], kBebas = [];
 
+            // Tanggungan Tukar
             dataTanggunganTukar.forEach(hpUtang => {
                 const gr = dataSemuaGuru.find(g => cleanNumber(g[0]) === hpUtang);
                 if (gr) {
                     const c = document.createElement("div"); c.className = "kartu-guru status-tukar";
-                    c.innerHTML = `
-                        <div class="foto-wadah"><img src="${gr[4]||''}"></div>
-                        <div class="info-bawah">
-                            <h3>${gr[1]} <span class="badge-status bg-purple">TANGGUNGAN</span></h3>
-                            <p class="info-jadwal">Ketuk untuk Lunas (Bayar Tukar)</p>
-                        </div>
-                    `;
-                    c.onclick = () => bayarTukar(hpUtang, gr[1]);
-                    document.getElementById("areaTukar").appendChild(c);
+                    c.innerHTML = `<div class="foto-wadah"><img src="${gr[4]||''}"></div><div class="info-bawah"><h3>${gr[1]} <span class="badge-status bg-purple">TANGGUNGAN</span></h3><p class="info-jadwal">Ketuk untuk Lunas (Bayar Tukar)</p></div>`;
+                    c.onclick = () => bayarTukar(hpUtang, gr[1]); document.getElementById("areaTukar").appendChild(c);
                 }
             });
 
             dataSemuaGuru.forEach(guru => {
-                const noHp = guru[0] ? guru[0].toString().trim() : "";
-                const nama = guru[1] ? guru[1].toString().trim() : "Tanpa Nama";
-                const role = guru[2] ? guru[2].toString().trim() : "Guru Fan";
-                const fotoUrl = guru[4] || "";
-                const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                const noHp = guru[0] ? guru[0].toString().trim() : ""; const nama = guru[1] ? guru[1].toString().trim() : "Tanpa Nama";
+                const role = guru[2] ? guru[2].toString().trim() : "Guru Fan"; const fotoUrl = guru[4] || ""; const namaAman = nama.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                
+                let kat = "BEBAS", txtKls = "", info = "Jam Bebas";
+                let dtJ = null;
 
-                const dtJ = jadwalNow.find(j => j[5] == noHp);
-                let txtKls = dtJ ? dtJ[3] : "";
-                let info = role.toUpperCase() === "PIMPINAN" ? "Standby Kantor" : "Jam Bebas";
-                if (dtJ) info = `${txtKls} - ${dtJ[4]}`;
-
-                let isPiket = (txtKls && txtKls.toString().toUpperCase().includes("PIKET"));
-                let kat = "WAJIB"; 
-                if (role.toUpperCase() === "PIMPINAN") kat = dtJ ? "WAJIB" : "PIMPINAN_STANDBY";
-                else if (isPiket) kat = "PIKET";
-                else if (!hpsWajibAtauPiket.includes(noHp)) kat = "BEBAS";
+                if(modeAplikasi === "Madrasah") {
+                    dtJ = jadwalNow.find(j => cleanNumber(j[5]) == cleanNumber(noHp));
+                    if (dtJ) { txtKls = dtJ[3]; info = `${txtKls} - ${dtJ[4]}`; } else if(role.toUpperCase() === "PIMPINAN") info = "Standby Kantor";
+                    let isPiket = (txtKls && txtKls.toString().toUpperCase().includes("PIKET"));
+                    
+                    if (role.toUpperCase() === "PIMPINAN") kat = dtJ ? "WAJIB" : "PIMPINAN_STANDBY";
+                    else if (isPiket) kat = "PIKET";
+                    else if (dtJ) kat = "WAJIB";
+                } else {
+                    dtJ = jadwalNow.find(j => cleanNumber(j[2]) == cleanNumber(noHp)); // Jdwl Musyawarah
+                    if(dtJ) { info = `Jaga Musyawarah (${dtJ[1]})`; kat = "WAJIB"; } // dtJ[1] is Kategori
+                }
 
                 const lg = dataSemuaLog.find(l => l.tanggal === strTgl && l.sesi === sesiNo.toString() && cleanNumber(l.noHp) === cleanNumber(noHp));
                 let st = lg ? lg.status : "Belum Absen";
 
-                const c = document.createElement("div");
-                c.className = "kartu-guru" + (isPiket ? " kartu-piket" : ""); c.id = `card-${noHp}`;
-                
-                if (st === "Hadir" || st === "Standby") c.classList.add("status-hadir");
-                else if (st === "Bantu") c.classList.add("status-bantu");
-                else if (st === "Tukar") c.classList.add("status-tukar");
-                else if (st === "Sakit") c.classList.add("status-sakit");
-                else if (st === "Izin") c.classList.add("status-izin");
-                else if (st === "Alpa") c.classList.add("status-alpa");
+                const c = document.createElement("div"); c.className = "kartu-guru" + (kat==="PIKET" ? " kartu-piket" : ""); c.id = `card-${noHp}`;
+                if (st === "Hadir" || st === "Standby") c.classList.add("status-hadir"); else if (st === "Bantu" || st === "Jaga") c.classList.add("status-bantu"); else if (st === "Tukar") c.classList.add("status-tukar"); else if (st === "Sakit") c.classList.add("status-sakit"); else if (st === "Izin") c.classList.add("status-izin"); else if (st === "Alpa") c.classList.add("status-alpa");
 
                 if (kat === "WAJIB") c.onclick = () => { kirimKeDatabaseSpreadsheet(noHp, namaAman, c.classList.contains("status-hadir") ? "Belum Absen" : "Hadir"); };
                 else c.onclick = () => bukaModalAksi(noHp, namaAman, kat);
@@ -630,10 +471,7 @@
 
                 c.innerHTML = `
                     <div class="foto-wadah"><img src="${fotoUrl}"></div>
-                    <div class="info-bawah">
-                        <h3>${nama} <span id="badge-${noHp}" class="badge-status ${getBadgeClass(st)}">${getBadgeText(st)}</span></h3>
-                        <p class="info-jadwal">${info}</p>
-                    </div>
+                    <div class="info-bawah"><h3>${nama} <span id="badge-${noHp}" class="badge-status ${getBadgeClass(st)}">${getBadgeText(st)}</span></h3><p class="info-jadwal">${info}</p></div>
                     <div class="titik-tiga" onclick="bukaMenu(event, '${noHp}')">⋮</div>
                     <div class="dropdown-menu" id="menu-${noHp}">
                         ${optTukarHtml}
@@ -643,46 +481,33 @@
                     </div>
                 `;
 
-                if (role.toUpperCase() === "PIMPINAN") kPimpinan.push(c);
-                else if (kat === "WAJIB" || kat === "PIKET") {
-                    let key = "Z_ZZZ"; 
-                    if (txtKls) {
-                        let up = txtKls.toString().toUpperCase();
-                        if (up.includes("PIKET")) key = "Z_PIKET"; else if (up.includes("SIFIR")) key = "A_" + up; else key = "B_" + up;
-                    }
-                    kWajib.push({ el: c, k: key });
-                } else kBebas.push(c);
+                if(modeAplikasi === "Madrasah") {
+                    if (role.toUpperCase() === "PIMPINAN") kPimpinan.push(c);
+                    else if (kat === "WAJIB" || kat === "PIKET") {
+                        let key = "Z_ZZZ"; if (txtKls) { let up = txtKls.toString().toUpperCase(); if (up.includes("PIKET")) key = "Z_PIKET"; else if (up.includes("SIFIR")) key = "A_" + up; else key = "B_" + up; }
+                        kWajib.push({ el: c, k: key });
+                    } else kBebas.push(c);
+                } else {
+                    if(kat === "WAJIB") kWajib.push({el: c, k: nama}); // Sort A-Z for Musyawarah
+                    else kBebas.push(c);
+                }
             });
 
-            kPimpinan.forEach(k => document.getElementById("areaPimpinan").appendChild(k));
-            kWajib.sort((a, b) => a.k.localeCompare(b.k)).forEach(i => document.getElementById("areaWajib").appendChild(i.el));
+            if(modeAplikasi === "Madrasah") {
+                kPimpinan.forEach(k => document.getElementById("areaPimpinan").appendChild(k));
+                kWajib.sort((a, b) => a.k.localeCompare(b.k)).forEach(i => document.getElementById("areaWajib").appendChild(i.el));
+            } else {
+                kWajib.sort((a, b) => a.k.localeCompare(b.k)).forEach(i => document.getElementById("areaWajib").appendChild(i.el));
+            }
             kBebas.forEach(k => document.getElementById("areaBebas").appendChild(k));
         }
 
-        // PERBAIKAN: Fungsi Buka Menu dengan penambahan class 'menu-active' agar popup tidak tertimbun
-        function bukaMenu(event, noHp) {
-            event.stopPropagation(); 
-            document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none');
-            document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active'));
-            
-            const menu = document.getElementById(`menu-${noHp}`);
-            const isHidden = (window.getComputedStyle(menu).display === 'none');
-            
-            if (isHidden) {
-                menu.style.display = 'flex';
-                document.getElementById(`card-${noHp}`).classList.add('menu-active');
-            } else {
-                menu.style.display = 'none';
-            }
-        }
-
+        function bukaMenu(e, hp) { e.stopPropagation(); document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none'); document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active')); const mn = document.getElementById(`menu-${hp}`); if (window.getComputedStyle(mn).display === 'none') { mn.style.display = 'flex'; document.getElementById(`card-${hp}`).classList.add('menu-active'); } else mn.style.display = 'none'; }
         document.addEventListener('click', () => { document.querySelectorAll('.dropdown-menu').forEach(m => m.style.display = 'none'); document.querySelectorAll('.kartu-guru').forEach(k => k.classList.remove('menu-active')); });
 
         async function kirimKeDatabaseSpreadsheet(hp, nm, st, e) {
             if (e) e.stopPropagation();
-            const elm = document.getElementById(`card-${hp}`); if (document.getElementById(`menu-${hp}`)) document.getElementById(`menu-${hp}`).style.display = 'none';
-            elm.classList.remove('menu-active'); // Hapus class penimpa z-index setelah opsi dipilih
-
+            const elm = document.getElementById(`card-${hp}`); if (document.getElementById(`menu-${hp}`)) document.getElementById(`menu-${hp}`).style.display = 'none'; elm.classList.remove('menu-active');
             const tgl = document.getElementById("tglAbsen").value; const ss = document.getElementById("pilihSesi").value;
             const hr = ["AHAD", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"][new Date(tgl).getDay()];
 
@@ -693,56 +518,22 @@
                 if (r.status === "sukses") {
                     let id = dataSemuaLog.findIndex(l => l.tanggal === tgl && l.sesi === ss && cleanNumber(l.noHp) === cleanNumber(hp));
                     if (id !== -1) dataSemuaLog[id].status = st; else dataSemuaLog.push({ tanggal: tgl, sesi: ss, noHp: hp, status: st });
-                    
                     elm.classList.remove("status-hadir", "status-bantu", "status-izin", "status-sakit", "status-alpa", "status-tukar");
-                    if (st === "Hadir" || st === "Standby") elm.classList.add("status-hadir");
-                    else if (st === "Bantu") elm.classList.add("status-bantu");
-                    else if (st === "Tukar") elm.classList.add("status-tukar");
-                    else if (st === "Izin" || st === "Sakit") elm.classList.add(st === "Izin" ? "status-izin" : "status-sakit");
-                    else if (st === "Alpa") elm.classList.add("status-alpa");
-
-                    const bdg = document.getElementById(`badge-${hp}`);
-                    if (bdg) { bdg.className = `badge-status ${getBadgeClass(st)}`; bdg.innerText = getBadgeText(st); }
+                    if (st === "Hadir" || st === "Standby") elm.classList.add("status-hadir"); else if (st === "Bantu" || st === "Jaga") elm.classList.add("status-bantu"); else if (st === "Tukar") elm.classList.add("status-tukar"); else if (st === "Izin" || st === "Sakit") elm.classList.add(st === "Izin" ? "status-izin" : "status-sakit"); else if (st === "Alpa") elm.classList.add("status-alpa");
+                    const bdg = document.getElementById(`badge-${hp}`); if (bdg) { bdg.className = `badge-status ${getBadgeClass(st)}`; bdg.innerText = getBadgeText(st); }
                 } else alert("Gagal: " + r.message);
             } catch (err) { elm.style.opacity = "1"; alert("Koneksi bermasalah."); }
         }
 
         async function generateLaporan() {
-            const tglMulai = document.getElementById("tglMulai").value;
-            const tglAkhir = document.getElementById("tglAkhir").value;
-            
-            if (!tglMulai || !tglAkhir) {
-                alert("Silakan tentukan tanggal Periode Dari dan Sampai terlebih dahulu.");
-                return;
-            }
-            
-            const pLoading = document.getElementById("loading");
-            pLoading.innerText = "Mengompilasi Data & Membangun Berkas Excel Yayasan...";
-            pLoading.style.display = "block";
-            
+            const tglMulai = document.getElementById("tglMulai").value; const tglAkhir = document.getElementById("tglAkhir").value;
+            if (!tglMulai || !tglAkhir) { alert("Silakan tentukan tanggal Periode Dari dan Sampai terlebih dahulu."); return; }
+            const pLoading = document.getElementById("loading"); pLoading.innerText = "Mengompilasi Data & Membangun Berkas Excel Yayasan..."; pLoading.style.display = "block";
             try {
-                const response = await fetch(API_URL, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        action: "generateLaporan",
-                        tglMulai: tglMulai,
-                        tglAkhir: tglAkhir
-                    })
-                });
-                
-                const hasil = await response.json();
-                pLoading.style.display = "none";
-                
-                if (hasil.status === "sukses") {
-                    // Mengarahkan browser untuk mengunduh file
-                    window.location.href = hasil.downloadUrl;
-                } else {
-                    alert("Gagal memproses laporan: " + hasil.message);
-                }
-            } catch (error) {
-                pLoading.style.display = "none";
-                alert("Gagal terhubung ke server Google Sheets.");
-            }
+                const response = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "generateLaporan", tglMulai: tglMulai, tglAkhir: tglAkhir }) });
+                const hasil = await response.json(); pLoading.style.display = "none";
+                if (hasil.status === "sukses") window.location.href = hasil.downloadUrl; else alert("Gagal memproses laporan: " + hasil.message);
+            } catch (error) { pLoading.style.display = "none"; alert("Gagal terhubung ke server Google Sheets."); }
         }
     </script>
 </body>
